@@ -44,14 +44,21 @@ namespace Web.BLL.Cource
            
         }
 
-        public Task<CourceEntity> GetById(long Id)
+        public async Task<CourceEntity> GetById(long Id)
         {
-            throw new NotImplementedException();
+            return await _courceRepository.GetByIdAsync(Id);
         }
 
-        public Task<bool> Delete(long Id)
+        public async Task<bool> Delete(long Id)
         {
-            throw new NotImplementedException();
+            var obj = await _courceRepository.GetByIdAsync(Id);
+            if (obj != null)
+            {
+                _courceRepository.Remove(obj);
+                await _unitofWork.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
 
         public async Task<IEnumerable<CourceEntity>> GetAll()

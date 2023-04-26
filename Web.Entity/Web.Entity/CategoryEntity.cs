@@ -10,6 +10,6 @@ namespace Web.Entity
     {
         public long Id { get; set; }
         public string Name { get; set; }
-        public virtual CourceEntity CourceEntity { get; set; }
+        public virtual ICollection<CourceEntity> CourceEntity { get; set; }
     }
 }

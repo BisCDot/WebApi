@@ -86,6 +86,10 @@ namespace Web.DAL.Repositories
         {
             _dbSet.RemoveRange(entities);
         }
+        public ValueTask<TEntity> GetByIdAsync(long id)
+        {
+            return _dbSet.FindAsync(id);
+        }
 
     }
 }

@@ -23,6 +23,6 @@ namespace Web.Entity
         public DateTime CreateDatatime { get; set; }
         public long CategorysId { get; set; }
         [ForeignKey(nameof(CategorysId))]
-        public virtual CategoryEntity Categorys { get; set; }
+        public CategoryEntity Category { get; set; }
     }
 }

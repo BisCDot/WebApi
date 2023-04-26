@@ -25,5 +25,10 @@ namespace Web.NetCore.Controllers
         {
             return await _courceBLL.GetAll();
         }
+        [HttpDelete]
+        public async Task<object> Delete(long Id)
+        {
+            return await _courceBLL.Delete(Id);
+        }
     }
 }

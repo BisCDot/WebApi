@@ -10,7 +10,7 @@ using Web.DAL.Common;
 namespace Web.DAL.Migrations.Core
 {
     [DbContext(typeof(MainDbContext))]
-    [Migration("20230425092211_InitialModel")]
+    [Migration("20230426035621_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,21 +66,20 @@ namespace Web.DAL.Migrations.Core
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategorysId")
-                        .IsUnique();
+                    b.HasIndex("CategorysId");
 
                     b.ToTable("Courcess");
                 });
 
             modelBuilder.Entity("Web.Entity.CourceEntity", b =>
                 {
-                    b.HasOne("Web.Entity.CategoryEntity", "Categorys")
-                        .WithOne("CourceEntity")
-                        .HasForeignKey("Web.Entity.CourceEntity", "CategorysId")
+                    b.HasOne("Web.Entity.CategoryEntity", "Category")
+                        .WithMany("CourceEntity")
+                        .HasForeignKey("CategorysId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Categorys");
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Web.Entity.CategoryEntity", b =>

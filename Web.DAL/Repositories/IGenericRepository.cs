@@ -9,6 +9,7 @@ namespace Web.DAL.Repositories
 {
     public interface IGenericRepository<TEntity,TContext> where TEntity : class
     {
+        ValueTask<TEntity> GetByIdAsync(long id);
         TEntity GetById(long Id);
         Task<IEnumerable<TEntity>> GetAllAsync();
         IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);

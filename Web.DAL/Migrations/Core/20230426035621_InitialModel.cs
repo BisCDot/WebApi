@@ -48,8 +48,7 @@ namespace Web.DAL.Migrations.Core
             migrationBuilder.CreateIndex(
                 name: "IX_Courcess_CategorysId",
                 table: "Courcess",
-                column: "CategorysId",
-                unique: true);
+                column: "CategorysId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
