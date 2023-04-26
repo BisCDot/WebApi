@@ -1,0 +1,17 @@
+C:\Work\WebApi\Web.BLL\bin\Debug\net5.0\Web.BLL.deps.json
+C:\Work\WebApi\Web.BLL\bin\Debug\net5.0\Web.BLL.dll
+C:\Work\WebApi\Web.BLL\bin\Debug\net5.0\Web.BLL.pdb
+C:\Work\WebApi\Web.BLL\bin\Debug\net5.0\Web.DAL.dll
+C:\Work\WebApi\Web.BLL\bin\Debug\net5.0\Web.Entity.dll
+C:\Work\WebApi\Web.BLL\bin\Debug\net5.0\Web.DAL.pdb
+C:\Work\WebApi\Web.BLL\bin\Debug\net5.0\Web.Entity.pdb
+C:\Work\WebApi\Web.BLL\obj\Debug\net5.0\Web.BLL.csproj.AssemblyReference.cache
+C:\Work\WebApi\Web.BLL\obj\Debug\net5.0\Web.BLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Work\WebApi\Web.BLL\obj\Debug\net5.0\Web.BLL.AssemblyInfoInputs.cache
+C:\Work\WebApi\Web.BLL\obj\Debug\net5.0\Web.BLL.AssemblyInfo.cs
+C:\Work\WebApi\Web.BLL\obj\Debug\net5.0\Web.BLL.csproj.CoreCompileInputs.cache
+C:\Work\WebApi\Web.BLL\obj\Debug\net5.0\Web.BLL.csproj.CopyComplete
+C:\Work\WebApi\Web.BLL\obj\Debug\net5.0\Web.BLL.dll
+C:\Work\WebApi\Web.BLL\obj\Debug\net5.0\refint\Web.BLL.dll
+C:\Work\WebApi\Web.BLL\obj\Debug\net5.0\Web.BLL.pdb
+C:\Work\WebApi\Web.BLL\obj\Debug\net5.0\ref\Web.BLL.dll
