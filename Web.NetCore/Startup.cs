@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Web.BLL.Category;
 using Web.BLL.Cource;
 using Web.DAL.Common;
 using Web.DAL.Cource;
@@ -48,6 +49,8 @@ namespace Web.NetCore
             services.AddTransient<IUnitofWork<MainDbContext>, UnitOfWork<MainDbContext>>();
             services.AddTransient<ICourceBLL, CourceBLL>();
             services.AddScoped<ICourceRepository, CourceRepository>();
+            services.AddScoped<ICategoryBLL, CategoryBLL>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

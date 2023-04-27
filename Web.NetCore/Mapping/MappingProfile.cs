@@ -10,6 +10,8 @@ namespace Web.NetCore.Mapping
         {
             CreateMap<CourceEntity, CourceResource>();
             CreateMap<CourceResource, CourceEntity>();
+            CreateMap<CategoryEntity, CategoryResource>();
+            CreateMap<CategoryResource,CategoryEntity>();
         }
     }
 }

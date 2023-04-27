@@ -11,6 +11,6 @@ namespace Web.DAL.Cource
 {
     public interface ICourceRepository : IGenericRepository<CourceEntity,MainDbContext>
     {
-
+        
     }
 }

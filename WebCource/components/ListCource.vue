@@ -114,8 +114,8 @@
                 ></b-form-input>
               </b-form-group>
               <select class="form-select form-select-sm" aria-label=".form-select-sm example" v-model="updateCource.CategoriesId">
-                <option selected>Chọn danh mục</option>
-                <option value="1">Tin Học Văn Phòng</option>
+                <option selected >Chọn danh mục</option>
+                <option v-for="item in Categories" :value="item.id">{{item.name}}</option>
               </select>
             </form>
           </b-modal>
@@ -144,12 +144,14 @@ export default {
           Price : "",
           Image : "",
           CategoriesId : 0
-        }
+        },
+        Categories : null
 
     }
   },
   async created() {
       await this.getList();
+      await this.getCategory();
   },
   methods: {
     async getList(){
@@ -158,6 +160,10 @@ export default {
     },
     async DeleteOk(id){
       await this.$axios.$delete(`/api/Cource/Delete/?Id=${id}`)
+    },
+    async getCategory(){
+      var result = await this.$axios.$get('/api/Category/GetAll');
+      this.Categories = result.result
     },
     Test(item){
       this.modalShow = !this.modalShow;

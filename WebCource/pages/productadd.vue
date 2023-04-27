@@ -17,9 +17,9 @@
         <label for="exampleFormControlInput1" class="form-label" >Link Images</label>
         <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="link" v-model="Image">
       </div>
-      <select class="form-select form-select-sm" aria-label=".form-select-sm example" v-model="Category">
+      <select class="form-select form-select-sm" aria-label=".form-select-sm example"  v-model="Category">
         <option selected>Chọn danh mục</option>
-        <option value="1">Tin học văn phòng</option>
+        <option v-for="item in CategoryItem" :value="item.id">{{item.name}}</option>
       </select>
       <button class="btn btn-primary" type="submit" @click="addProduct">thêm</button>
     </form>
@@ -37,8 +37,12 @@ export default {
       Decription: "",
       Price : 0,
       Image : "",
-      Category : 0
+      Category : 0,
+      CategoryItem : null
     }
+  },
+  async created() {
+     await this.GetCategory();
   },
   methods : {
     async addProduct(){
@@ -49,7 +53,11 @@ export default {
             price : this.Price,
             categorysId : this.Category
         })
-    }
+    },
+    async GetCategory(){
+      var result = await this.$axios.$get('/api/Category/GetAll');
+      this.CategoryItem = result.result;
+    },
   }
 }
 </script>
