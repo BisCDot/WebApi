@@ -7,7 +7,7 @@
       </div>
       <div class="mb-3">
         <label for="exampleFormControlTextarea1" class="form-label" >Mô tả</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="Decription"></textarea>
+        <textarea placeholder="Mô tả" class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="Decription"></textarea>
       </div>
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label" >Giá</label>
@@ -53,6 +53,7 @@ export default {
             price : this.Price,
             categorysId : this.Category
         })
+      window.location.reload(true)
     },
     async GetCategory(){
       var result = await this.$axios.$get('/api/Category/GetAll');

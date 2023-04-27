@@ -155,11 +155,12 @@ export default {
   },
   methods: {
     async getList(){
-      var ip = await this.$axios.$get('/api/Cource/GetAll')
-      this.Cource = ip.result
+      var ip = await this.$axios.$get('/api/Cource/GetAll');
+      this.Cource = ip.result;
     },
     async DeleteOk(id){
-      await this.$axios.$delete(`/api/Cource/Delete/?Id=${id}`)
+      await this.$axios.$delete(`/api/Cource/Delete/?Id=${id}`);
+      window.location.reload(true)
     },
     async getCategory(){
       var result = await this.$axios.$get('/api/Category/GetAll');
@@ -182,6 +183,7 @@ export default {
             price : this.updateCource.Price,
             categorysId : this.updateCource.CategoriesId
        })
+      window.location.reload(true)
     }
   }
 }
