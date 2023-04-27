@@ -14,5 +14,6 @@ namespace Web.BLL.Cource
         Task<CourceEntity> GetById(long Id);
         Task<bool> Delete(long Id);
         Task<IEnumerable<CourceEntity>> GetAll();
+        Task<bool> Save(CourceResource cource);
     }
 }

@@ -30,5 +30,10 @@ namespace Web.NetCore.Controllers
         {
             return await _courceBLL.Delete(Id);
         }
+        [HttpPost]
+        public async Task<object> Save(CourceResource cource)
+        {
+            return await _courceBLL.Save(cource);
+        }
     }
 }

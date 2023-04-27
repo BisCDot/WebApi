@@ -90,6 +90,19 @@ namespace Web.DAL.Repositories
         {
             return _dbSet.FindAsync(id);
         }
+        public TEntity Update(TEntity entity)
+        {
+            try
+            {
+                if (entity.GetType().GetProperty("LastModifiedDate") != null)
+                    entity.GetType().GetProperty("LastModifiedDate").SetValue(entity, DateTime.Now, null);
+            }
+            catch (Exception)
+            {
 
+            }
+            _dbSet.Update(entity);
+            return entity;
+        }
     }
 }

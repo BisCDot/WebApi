@@ -66,5 +66,17 @@ namespace Web.BLL.Cource
 
             return await _courceRepository.GetAllAsync();
         }
+        
+        public async Task<bool> Save(CourceResource entity)
+        {
+            var obj = _mapper.Map<CourceResource, CourceEntity>(entity);
+            if (obj.Id > 0)
+                _courceRepository.Update(obj);
+            else
+                await _courceRepository.AddAsync(obj);
+
+            await _unitofWork.SaveChangesAsync();
+            return true;
+        }
     }
 }
