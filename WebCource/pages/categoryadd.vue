@@ -19,66 +19,42 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"  @click="DeleteOk(item.id)">
               X
             </button>
-            <!--            <b-modal v-model="modalShow" title="Xóa" @ok="DeleteOk">Bạn có chắc muốn xóa item này không ?</b-modal>-->
           </div>
         </td>
         <td>
           <div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"  @click="Edit(item)">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"  @click="Edit(item.id)">
               Sửa
             </button>
-              <Edit :item="updateCategory"
-                    :modal-show="modalShow"
-                    @save-category="SaveCategory">
-              </Edit>
           </div>
         </td>
       </tr>
       </tbody>
     </table>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-      <button class="btn btn-primary me-md-2" type="button" @click="addCategoryShow = !addCategoryShow">Thêm danh mục</button>
-      <b-modal
-        v-model="addCategoryShow"
-        id="modal-prevent-closing"
-        ref="modal"
-        title="thêm danh mục "
-        @ok="addCategory"
-      >
-        <form ref="form" @submit.stop.prevent="handleSubmit">
-          <b-form-group
-            label="Name"
-            label-for="name-input"
-            invalid-feedback="Name is required"
-          >
-            <b-form-input
-              id="name-input"
-              v-model="Category.name"
-              required
-            ></b-form-input>
-          </b-form-group>
-        </form>
-      </b-modal>
+      <button class="btn btn-primary me-md-2" type="button" @click="() => {addCategoryShow = !addCategoryShow;modalShow = true}">Thêm danh mục</button>
     </div>
+    <Transition v-if="modalShow">
+      <EditCategory :show-modal="addCategoryShow" :category="Category" title="Thêm danh mục" @Save="addCategory" :showInputId="false"></EditCategory>
+    </Transition>
+    <Transition v-else>
+      <EditCategory :show-modal="editCategory" :category="Category" Title="Sửa Danh Mục" :showInputId="true" @Save="SaveCategory"></EditCategory>
+    </Transition>
   </div>
 </template>
 
 <script>
-import Edit from '@/components/Edit.vue'
 
 export default {
   name: "categoryadd",
-  components: {Edit},
+  components: {},
   layout: 'default',
   data(){
     return {
       itemsCategory : null,
-      modalShow : false,
+      modalShow : true,
       addCategoryShow : false,
-      updateCategory : {
-        id : 0,
-        name : ""
-      },
+      editCategory : false,
       Category : {
         id : 0,
         name : ""
@@ -94,25 +70,39 @@ export default {
       var result = await this.$axios.$get('/api/Category/GetAll');
       this.itemsCategory = result.result;
     },
-    async Edit(item){
-        this.modalShow = !this.modalShow;
-        this.updateCategory.name = item.name
-        this.updateCategory.id = item.id
+    async Edit(id){
+        this.modalShow = false
+        this.editCategory = !this.editCategory;
+        if (id > 0){
+          let response = await this.$axios.$get(`/api/Category/GetById/?Id=${id}`);
+          let item = response.result
+          this.Category.name = item.name
+          this.Category.id = item.id
+        }
+
     },
-   async addCategory(){
+   async addCategory(item){
       await this.$axios.post('/api/Category/AddCategory',{
-        name : this.Category.name
+        name : item.name
       });
-      this.GetCategory();
+      this.addCategoryShow = false;
+     await this.GetCategory();
     },
     async DeleteOk(id){
       await  this.$axios.$delete(`/api/Category/Delete/?Id=${id}`);
     },
-    async SaveCategory(){
-      await  this.$axios.post('/api/Category/Save',{
-        id : this.updateCategory.id,
-        name : this.updateCategory.name
-      })
+    async SaveCategory(item){
+      console.log(item)
+      if(item.id > 0){
+        await  this.$axios.post('/api/Category/Save',{
+          id : item.id,
+          name : item.name
+        });
+      }
+      this.addCategoryShow = !this.addCategoryShow;
+      this.modalShow = true;
+      this.editCategory = false;
+      await this.GetCategory();
     }
   }
 }

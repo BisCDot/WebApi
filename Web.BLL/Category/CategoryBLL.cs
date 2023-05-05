@@ -65,5 +65,9 @@ namespace Web.BLL.Category
             }
             return false;
         }
+        public async Task<CategoryEntity> GetById(long id)
+        {
+            return await _category.GetByIdAsync(id);
+        }
     }
 }

@@ -35,5 +35,10 @@ namespace Web.NetCore.Controllers
         {
             return await _categoryBLL.Delete(id);
         }
+        [HttpGet]
+        public async Task<object> GetById(long id)
+        {
+            return await _categoryBLL.GetById(id);
+        }
     }
 }

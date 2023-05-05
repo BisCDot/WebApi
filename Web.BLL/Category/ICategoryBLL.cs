@@ -10,6 +10,7 @@ namespace Web.BLL.Category
 {
     public interface ICategoryBLL
     {
+        Task<CategoryEntity> GetById(long id);
         Task<bool> AddCategory(CategoryResource category);
         Task<IEnumerable<CategoryEntity>> GetAll();
         Task<bool> SaveCategory(CategoryResource category);

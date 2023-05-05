@@ -2,215 +2,130 @@
   <div>
     <table class="table">
       <thead class="table-dark">
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Id</th>
-          <th scope="col">title</th>
-          <th scope="col">Description</th>
-          <th scope="col">Image</th>
-          <th scope="col">Price</th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-        </tr>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Id</th>
+        <th scope="col">title</th>
+        <th scope="col">Description</th>
+        <th scope="col">Image</th>
+        <th scope="col">Price</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </tr>
       </thead>
       <tr v-for="item in Cource">
         <th scope="row"></th>
-        <td>{{item.id}}</td>
-        <td>{{item.title}}</td>
-        <td>{{item.description}}</td>
+        <td>{{ item.id }}</td>
+        <td>{{ item.title }}</td>
+        <td>{{ item.description }}</td>
         <td><img class="image-list" :src="item.image"></td>
-        <td>{{item.price}}</td>
+        <td>{{ item.price }}</td>
         <td>
           <div class="d-grid gap-2 d-md-block">
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"  @click="DeleteOk(item.id)">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                    @click="DeleteOk(item.id)">
               X
             </button>
-<!--            <b-modal v-model="modalShow" title="Xóa" @ok="DeleteOk">Bạn có chắc muốn xóa item này không ?</b-modal>-->
+            <!--            <b-modal v-model="modalShow" title="Xóa" @ok="DeleteOk">Bạn có chắc muốn xóa item này không ?</b-modal>-->
           </div>
         </td>
         <td>
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"  @click="Edit(item)">
-              Sửa
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                  @click="EditProduct(item.id)">
+            Sửa
           </button>
-          <b-modal
-            v-model="modalShow"
-            id="modal-prevent-closing"
-            ref="modal"
-            title="Sửa sản phẩm"
-            @ok="SaveProduct"
-          >
-            <form ref="form" @submit.stop.prevent="handleSubmit">
-              <b-form-group
-                label="Id"
-                label-for="name-input"
-                invalid-feedback="Name is required"
-                :state="item.id"
-              >
-                <b-form-input
-                  id="name-input"
-                  :state="item.id"
-                  v-model="updateCource.Id"
-                  v-model:value="updateCource.Id"
-                  required
-                ></b-form-input>
-              </b-form-group>
-              <b-form-group
-                label="Title"
-                label-for="name-input"
-                invalid-feedback="Title is required"
-
-              >
-                <b-form-input
-                  id="name-input"
-                  v-model="updateCource.Title"
-                  :state="item.id"
-                  v-model:value="updateCource.Title"
-                  required
-                ></b-form-input>
-              </b-form-group>
-              <b-form-group
-                label="Description"
-                label-for="name-input"
-                invalid-feedback="Description is required"
-
-              >
-                <b-form-input
-                  id="name-input"
-                  v-model="updateCource.Description"
-                  :state="item.id"
-                  v-model:value="updateCource.Description"
-                  required
-                ></b-form-input>
-              </b-form-group>
-              <b-form-group
-                label="Link image"
-                label-for="name-input"
-                invalid-feedback="image is required"
-
-              >
-                <b-form-input
-                  id="name-input"
-                  v-model="updateCource.Image"
-                  :state="item.id"
-                  v-model:value="updateCource.Image"
-                  required
-                ></b-form-input>
-              </b-form-group>
-              <b-form-group
-                label="Price"
-                label-for="name-input"
-                invalid-feedback="Price is required"
-
-              >
-                <b-form-input
-                  id="name-input"
-                  v-model="updateCource.Price"
-                  :state="item.id"
-                  v-model:value="updateCource.Price"
-                  required
-                ></b-form-input>
-              </b-form-group>
-              <select class="form-select form-select-sm" aria-label=".form-select-sm example" v-model="updateCource.CategoriesId">
-                <option selected >Chọn danh mục</option>
-                <option v-for="item in Categories" :value="item.id">{{item.name}}</option>
-              </select>
-            </form>
-          </b-modal>
         </td>
       </tr>
     </table>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-      <button class="btn btn-primary me-md-2" type="button" @click="addProductShow = !addProductShow">Thêm sản phẩm</button>
-      <ProductAdd :modal-show="addProductShow" CategoryItem="Categories" Title="Thêm sản phẩm" @save="addProduct()" @addproduct="test"></ProductAdd>
+      <button class="btn btn-primary me-md-2" type="button" @click="()=>{modalShow = true; id = 0}">Thêm sản
+        phẩm
+      </button>
     </div>
+    <Transition >
+      <EditProduct @Save="addProduct" :id="id" v-if="modalShow" @close="closeForm()"></EditProduct>
+    </Transition>
   </div>
 </template>
 
 <script>
 
-import ProductAdd from  '@/components/ProductAdd.vue'
 export default {
-  components : {ProductAdd},
   name: "ListCource.vue",
-  data(){
-    return{
-        Cource : [],
-        modalShow : false,
-        updateCource : {
-          Id : "",
-          Title : "",
-          Description : "",
-          Price : "",
-          Image : "",
-          CategoriesId : 0
-        },
-        Product : {
-          Id : "",
-          Title : "",
-          Description:  "",
-          Price: 0,
-          Image : "",
-          CategoriesId : 0
-        },
-        Categories : null,
-        addProductShow : false,
+  data() {
+    return {
+      Cource: [],
+      ValueInputTitle: "",
+      modalShow: false,
+
+      Product: {
+        Id: "",
+        Title: "",
+        Description: "",
+        Price: 0,
+        Image: "",
+        CategoriesId: ""
+      },
+      Categories: null,
+      addProductShow: false,
+      editShow: false,
+      id: 0
     }
   },
   async created() {
-      await this.getList();
-      await this.getCategory();
+    await this.getList();
   },
   methods: {
-    async getList(){
+    closeForm(){
+      this.modalShow = false
+    },
+    async getList() {
       var ip = await this.$axios.$get('/api/Cource/GetAll');
       this.Cource = ip.result;
     },
-    async DeleteOk(id){
+    async DeleteOk(id) {
       await this.$axios.$delete(`/api/Cource/Delete/?Id=${id}`);
-      window.location.reload(true)
+      await this.getList();
     },
-    async getCategory(){
-      var result = await this.$axios.$get('/api/Category/GetAll');
-      this.Categories = result.result
+
+    async EditProduct(id) {
+      this.id= id
+      this.modalShow = true
     },
-    Edit(item){
-      this.modalShow = !this.modalShow;
-      this.updateCource.Title = item.title;
-      this.updateCource.Id = item.id;
-      this.updateCource.Description = item.description;
-      this.updateCource.Image = item.image;
-      this.updateCource.Price = item.price;
-    },
-    async SaveProduct(){
-        await this.$axios.post('/api/Cource/Save',{
-            id : this.updateCource.Id,
-            title : this.updateCource.Title,
-            description : this.updateCource.Description,
-            image : this.updateCource.Image,
-            price : this.updateCource.Price,
-            categoryId : this.updateCource.CategoriesId
-       })
-    },
-    async addProduct(Product){
+
+    async addProduct(Product) {
       console.log(Product)
-      await  this.$axios.post("/api/Cource/Add",{
-        title : Product.Title,
-        description : Product.Decription,
-        image : Product.Image,
-        price : Product.Price,
-        categoryId : Product.categoryId
-      })
+      if (Product != null) {
+        await this.$axios.post("/api/Cource/Add", {
+          title: Product.Title,
+          description: Product.Description,
+          image: Product.Image,
+          price: Product.Price,
+          categoryId: Product.categoryId
+        })
+        this.addProductShow = !this.addProductShow;
+        await this.getList();
+      }
     },
-    test(obj){
-      console.log(obj)
-    }
+    async SaveProduct() {
+      await this.$axios.post('/api/Cource/Save', {
+        id: this.updateCource.Id,
+        title: this.updateCource.Title,
+        description: this.updateCource.Description,
+        image: this.updateCource.Image,
+        price: this.updateCource.Price,
+        categoryId: this.updateCource.CategoriesId
+      });
+      this.editShow = false;
+      await this.getList();
+    },
   }
 }
 </script>
 
 <style scoped>
-.image-list{
+.image-list {
   height: 50px;
   width: 50px;
 }

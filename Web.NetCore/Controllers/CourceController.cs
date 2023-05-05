@@ -35,5 +35,10 @@ namespace Web.NetCore.Controllers
         {
             return await _courceBLL.Save(cource);
         }
+        [HttpGet]
+        public async Task<object> GetById(long id)
+        {
+            return await _courceBLL.GetById(id);
+        }
     }
 }
