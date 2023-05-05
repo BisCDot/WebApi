@@ -3,23 +3,8 @@
     <div class="overlay" @click="CloseModal"></div>
     <div class="modal">
       <button class="close" @click="CloseModal">x</button>
-      <h3>{{Title}}</h3>
+      <h3>{{title}}</h3>
       <div class="main-product-add">
-        <div v-if="showId">
-          <b-form-group
-            label="Id"
-            label-for="name-input"
-            invalid-feedback="Name is required"
-            :state="product.id"
-          >
-            <b-form-input
-              id="name-input"
-              :state="product.id"
-              v-model="product.Id"
-              v-model:value="product.Id"
-            ></b-form-input>
-          </b-form-group>
-        </div>
         <b-form-group
           label="Title"
           label-for="name-input"
@@ -38,8 +23,7 @@
         >
           <b-form-input
             id="name-input"
-            v-model="product.Description"
-            :value="product.Description"
+            v-model="product.description"
             required
           ></b-form-input>
         </b-form-group>
@@ -50,8 +34,7 @@
         >
           <b-form-input
             id="name-input"
-            v-model="product.Image"
-            v-model:value="product.Image"
+            v-model="product.image"
             required
           ></b-form-input>
         </b-form-group>
@@ -62,8 +45,7 @@
         >
           <b-form-input
             id="name-input"
-            v-model="product.Price"
-            v-model:value="product.Price"
+            v-model="product.price"
             required
           ></b-form-input>
         </b-form-group>
@@ -74,7 +56,7 @@
             </option>
           </select>
           <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-primary me-md-2" type="button" @click="Save(product)">Ok</button>
+            <button class="btn btn-primary me-md-2" type="button" @click="Save">Ok</button>
           </div>
       </div>
     </div>
@@ -82,7 +64,7 @@
 </template>
 <script>
 export default {
-  name: "Edit.vue",
+  name: "EditProduct.vue",
   props: {
     id: {
       type: Number,
@@ -110,8 +92,8 @@ export default {
     CloseModal(){
       this.$emit('close')
     },
-    Save(product){
-      this.$emit('Save',product)
+    Save(){
+      this.$emit('Save',this.product)
     },
     async getCategory() {
       var result = await this.$axios.$get('/api/Category/GetAll');

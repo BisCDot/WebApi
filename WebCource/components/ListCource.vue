@@ -27,7 +27,6 @@
                     @click="DeleteOk(item.id)">
               X
             </button>
-            <!--            <b-modal v-model="modalShow" title="Xóa" @ok="DeleteOk">Bạn có chắc muốn xóa item này không ?</b-modal>-->
           </div>
         </td>
         <td>
@@ -98,10 +97,10 @@ export default {
       console.log(Product)
       if (Product != null) {
         await this.$axios.post("/api/Cource/Add", {
-          title: Product.Title,
-          description: Product.Description,
-          image: Product.Image,
-          price: Product.Price,
+          title: Product.title,
+          description: Product.description,
+          image: Product.image,
+          price: Product.price,
           categoryId: Product.categoryId
         })
         this.addProductShow = !this.addProductShow;
