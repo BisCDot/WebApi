@@ -11,7 +11,7 @@ export default [
   },
   {
     name: 'Thêm Sản Phẩm',
-    path : '/productadd',
-    component: '/productadd.vue'
+    path : '/productaddfrom',
+    component: '/productaddfrom.vue'
   }
 ]

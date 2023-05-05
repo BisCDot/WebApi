@@ -10,7 +10,6 @@ namespace Web.Entity
 {
     public class CourceEntity
     {
-        [Key]
         public long Id { get; set; }
         [Required]
         public string Title { get; set; }
@@ -21,8 +20,7 @@ namespace Web.Entity
         [Required]
         public string Image { get; set; }
         public DateTime CreateDatatime { get; set; }
-        public long CategorysId { get; set; }
-        [ForeignKey(nameof(CategorysId))]
-        public CategoryEntity Category { get; set; }
+        public long CategoryId { get; set; }
+        public virtual CategoryEntity Category { get; set; }
     }
 }

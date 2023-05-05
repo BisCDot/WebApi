@@ -30,7 +30,7 @@
           </div>
         </td>
         <td>
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"  @click="Test(item)">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"  @click="Edit(item)">
               Sửa
           </button>
           <b-modal
@@ -38,8 +38,6 @@
             id="modal-prevent-closing"
             ref="modal"
             title="Sửa sản phẩm"
-            @show="resetModal"
-            @hidden="resetModal"
             @ok="SaveProduct"
           >
             <form ref="form" @submit.stop.prevent="handleSubmit">
@@ -122,16 +120,18 @@
         </td>
       </tr>
     </table>
-
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <button class="btn btn-primary me-md-2" type="button" @click="addProductShow = !addProductShow">Thêm sản phẩm</button>
+      <ProductAdd :modal-show="addProductShow" CategoryItem="Categories" Title="Thêm sản phẩm" @save="addProduct()" @addproduct="test"></ProductAdd>
+    </div>
   </div>
-
 </template>
 
 <script>
 
-
+import ProductAdd from  '@/components/ProductAdd.vue'
 export default {
-
+  components : {ProductAdd},
   name: "ListCource.vue",
   data(){
     return{
@@ -145,8 +145,16 @@ export default {
           Image : "",
           CategoriesId : 0
         },
-        Categories : null
-
+        Product : {
+          Id : "",
+          Title : "",
+          Description:  "",
+          Price: 0,
+          Image : "",
+          CategoriesId : 0
+        },
+        Categories : null,
+        addProductShow : false,
     }
   },
   async created() {
@@ -166,7 +174,7 @@ export default {
       var result = await this.$axios.$get('/api/Category/GetAll');
       this.Categories = result.result
     },
-    Test(item){
+    Edit(item){
       this.modalShow = !this.modalShow;
       this.updateCource.Title = item.title;
       this.updateCource.Id = item.id;
@@ -181,9 +189,21 @@ export default {
             description : this.updateCource.Description,
             image : this.updateCource.Image,
             price : this.updateCource.Price,
-            categorysId : this.updateCource.CategoriesId
+            categoryId : this.updateCource.CategoriesId
        })
-      window.location.reload(true)
+    },
+    async addProduct(Product){
+      console.log(Product)
+      await  this.$axios.post("/api/Cource/Add",{
+        title : Product.Title,
+        description : Product.Decription,
+        image : Product.Image,
+        price : Product.Price,
+        categoryId : Product.categoryId
+      })
+    },
+    test(obj){
+      console.log(obj)
     }
   }
 }

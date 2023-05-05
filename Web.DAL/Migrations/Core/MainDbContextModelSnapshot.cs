@@ -41,7 +41,7 @@ namespace Web.DAL.Migrations.Core
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<long>("CategorysId")
+                    b.Property<long>("CategoryId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreateDatatime")
@@ -64,7 +64,7 @@ namespace Web.DAL.Migrations.Core
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategorysId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Courcess");
                 });
@@ -72,17 +72,12 @@ namespace Web.DAL.Migrations.Core
             modelBuilder.Entity("Web.Entity.CourceEntity", b =>
                 {
                     b.HasOne("Web.Entity.CategoryEntity", "Category")
-                        .WithMany("CourceEntity")
-                        .HasForeignKey("CategorysId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Web.Entity.CategoryEntity", b =>
-                {
-                    b.Navigation("CourceEntity");
                 });
 #pragma warning restore 612, 618
         }

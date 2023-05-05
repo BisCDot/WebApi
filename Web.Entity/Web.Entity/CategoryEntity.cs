@@ -9,9 +9,7 @@ namespace Web.Entity
 {
     public class CategoryEntity
     {
-        [Key]
         public long Id { get; set; }
         public string Name { get; set; }
-        public virtual ICollection<CourceEntity> CourceEntity { get; set; }
     }
 }

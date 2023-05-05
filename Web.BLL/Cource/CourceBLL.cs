@@ -34,7 +34,7 @@ namespace Web.BLL.Cource
                     Price = obj.Price,
                     Description = obj.Description,
                     CreateDatatime = DateTime.Now,
-                    CategorysId = obj.CategorysId
+                    CategoryId = obj.CategoryId
                 };
                 await _courceRepository.AddAsync(cource);
                 await _unitofWork.SaveChangesAsync();

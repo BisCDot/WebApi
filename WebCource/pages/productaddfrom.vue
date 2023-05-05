@@ -29,7 +29,7 @@
 
 <script>
 export default {
-  name: "productadd.vue",
+  name: "productaddfrom.vue",
   layout: 'default',
   data(){
     return{
@@ -51,12 +51,11 @@ export default {
             description : this.Decription,
             image : this.Image,
             price : this.Price,
-            categorysId : this.Category
+            categoryId : this.Category
         })
-      window.location.reload(true)
     },
     async GetCategory(){
-      var result = await this.$axios.$get('/api/Category/GetAll');
+        var result = await this.$axios.$get('/api/Category/GetAll');
       this.CategoryItem = result.result;
     },
   }

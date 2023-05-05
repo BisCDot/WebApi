@@ -13,6 +13,6 @@ namespace Web.Entity.Resource
         public string Description { get; set; }
         public string Image { get; set; }
         public double Price { get; set; }
-        public long CategorysId { get; set; }
+        public long CategoryId { get; set; }
     }
 }
