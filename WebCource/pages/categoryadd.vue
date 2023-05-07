@@ -34,11 +34,8 @@
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
       <button class="btn btn-primary me-md-2" type="button" @click="() => {addCategoryShow = !addCategoryShow;modalShow = true}">Thêm danh mục</button>
     </div>
-    <Transition v-if="modalShow">
-      <EditCategory :show-modal="addCategoryShow" :category="Category" title="Thêm danh mục" @Save="addCategory" :showInputId="false"></EditCategory>
-    </Transition>
-    <Transition v-else>
-      <EditCategory :show-modal="editCategory" :category="Category" Title="Sửa Danh Mục" :showInputId="true" @Save="SaveCategory"></EditCategory>
+    <Transition>
+      <EditCategory :show-modal="addCategoryShow" v-if="modalShow" :category="Category" @Save="addCategory" :showInputId="false"></EditCategory>
     </Transition>
   </div>
 </template>
@@ -58,7 +55,8 @@ export default {
       Category : {
         id : 0,
         name : ""
-      }
+      },
+      id : 0
     }
   },
   async created() {

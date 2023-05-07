@@ -14,7 +14,6 @@
             <b-form-input
               id="name-input"
               v-model="Category.id"
-              v-model:value="Category.id"
             ></b-form-input>
           </b-form-group>
         </div>
@@ -26,14 +25,12 @@
       >
         <b-form-input
           id="name-input"
-          v-model="Category.name"
-          v-model:value="Category.name"
           required
         ></b-form-input>
       </b-form-group>
       </form>
       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button class="btn btn-primary me-md-2" type="button" @click="Save(Category)">Ok</button>
+        <button class="btn btn-primary me-md-2" type="button" @click="Save">Ok</button>
       </div>
     </div>
   </div>
@@ -42,7 +39,24 @@
 <script>
 export default {
   name: "EditCategory",
-  props : ['showModal','Category','Title','showInputId'],
+  async created() {
+   await this.GetDetail()
+  },
+  props: {
+    id : {
+      type : Number,
+      default : 0
+    },
+    title : {
+      type : String,
+      default: ""
+    }
+  },
+  data(){
+    return {
+      categories : {}
+    }
+  },
   emits : ['Save'],
   methods : {
     CloseModal(){
@@ -50,6 +64,14 @@ export default {
     },
     Save(Category){
       this.$emit('Save',Category)
+    },
+    async GetDetail(){
+      if(this.id > 0){
+        let value =  await this.$axios.$get(`/api/Category/GetById/?id= ${this.id}`)
+        this.categories = value.result;
+      }else {
+        this.categories = {}
+      }
     }
   }
 }
