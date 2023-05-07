@@ -13,7 +13,7 @@
         <th scope="col"></th>
       </tr>
       </thead>
-      <tr v-for="item in Cource">
+      <tr v-for="item in cource">
         <th scope="row"></th>
         <td>{{ item.id }}</td>
         <td>{{ item.title }}</td>
@@ -24,14 +24,14 @@
           <div class="d-grid gap-2 d-md-block">
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                    @click="DeleteOk(item.id)">
+                    @click="deleteOk(item.id)">
               X
             </button>
           </div>
         </td>
         <td>
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                  @click="EditProduct(item.id)">
+                  @click="editProduct(item.id)">
             Sửa
           </button>
         </td>
@@ -43,7 +43,7 @@
       </button>
     </div>
     <Transition >
-      <EditProduct @Save="addProduct" :id="id" v-if="modalShow" @close="closeForm()"></EditProduct>
+      <EditProduct @save="addProduct" :id="id" v-if="modalShow" @close="closeForm()"></EditProduct>
     </Transition>
   </div>
 </template>
@@ -54,7 +54,7 @@ export default {
   name: "ListCource.vue",
   data() {
     return {
-      Cource: [],
+      cource: [],
       ValueInputTitle: "",
       modalShow: false,
 
@@ -64,9 +64,9 @@ export default {
         Description: "",
         Price: 0,
         Image: "",
-        CategoriesId: ""
+        categoriesId: ""
       },
-      Categories: null,
+      categories: null,
       addProductShow: false,
       editShow: false,
       id: 0
@@ -80,15 +80,15 @@ export default {
       this.modalShow = false
     },
     async getList() {
-      var ip = await this.$axios.$get('/api/Cource/GetAll');
-      this.Cource = ip.result;
+      let ip = await this.$axios.$get('/api/Cource/GetAll');
+      this.cource = ip.result;
     },
-    async DeleteOk(id) {
+    async deleteOk(id) {
       await this.$axios.$delete(`/api/Cource/Delete/?Id=${id}`);
       await this.getList();
     },
 
-    async EditProduct(id) {
+    async editProduct(id) {
       this.id= id
       this.modalShow = true
     },
@@ -114,7 +114,7 @@ export default {
         description: this.updateCource.Description,
         image: this.updateCource.Image,
         price: this.updateCource.Price,
-        categoryId: this.updateCource.CategoriesId
+        categoryId: this.updateCource.categoriesId
       });
       this.editShow = false;
       await this.getList();

@@ -1,9 +1,7 @@
 <template>
   <div class="modal-vue">
-    <div class="overlay" v-if="showModal" @click="CloseModal"></div>
-    <div class="modal" v-if="showModal">
-      <button class="close" @click="CloseModal">x</button>
-      <h3>{{Title}}</h3>
+    <div class="modal" >
+      <h3>{{title}}</h3>
       <form ref="form">
         <div v-if="showInputId">
           <b-form-group
@@ -13,7 +11,7 @@
           >
             <b-form-input
               id="name-input"
-              v-model="Category.id"
+              v-model="categories.id"
             ></b-form-input>
           </b-form-group>
         </div>
@@ -25,12 +23,13 @@
       >
         <b-form-input
           id="name-input"
+          v-model="categories.name"
           required
         ></b-form-input>
       </b-form-group>
       </form>
       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button class="btn btn-primary me-md-2" type="button" @click="Save">Ok</button>
+        <button class="btn btn-primary me-md-2" type="button" @click="save">Ok</button>
       </div>
     </div>
   </div>
@@ -40,7 +39,7 @@
 export default {
   name: "EditCategory",
   async created() {
-   await this.GetDetail()
+   await this.getDetail()
   },
   props: {
     id : {
@@ -59,13 +58,17 @@ export default {
   },
   emits : ['Save'],
   methods : {
-    CloseModal(){
+    closeModal(){
         this.showModal = !this.showModal;
     },
-    Save(Category){
+    save(Category){
       this.$emit('Save',Category)
     },
-    async GetDetail(){
+    async getCategory() {
+      let result = await this.$axios.$get('/api/Category/GetAll');
+      this.Categories = result.result
+    },
+    async getDetail(){
       if(this.id > 0){
         let value =  await this.$axios.$get(`/api/Category/GetById/?id= ${this.id}`)
         this.categories = value.result;

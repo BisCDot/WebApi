@@ -51,12 +51,12 @@
         </b-form-group>
           <select class="form-select form-select-sm" aria-label=".form-select-sm example"  v-model="product.categoryId" >
             <option selected>Chọn danh mục</option>
-            <option v-for="item in Categories" :value="item.id">
+            <option v-for="item in categories" :value="item.id">
               {{item.name}}
             </option>
           </select>
           <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button class="btn btn-primary me-md-2" type="button" @click="Save">Ok</button>
+            <button class="btn btn-primary me-md-2" type="button" @click="save">Ok</button>
           </div>
       </div>
     </div>
@@ -78,9 +78,9 @@ export default {
   emits: ['Save'],
   data() {
     return {
-      ValueInputTitle: "",
+      valueInputTitle: "",
       product: {},
-      Categories: null,
+      categories: null,
       id: 0
     }
   },
@@ -89,19 +89,19 @@ export default {
     await this.getCategory()
   },
   methods : {
-    CloseModal(){
+    closeModal(){
       this.$emit('close')
     },
-    Save(){
+    save(){
       this.$emit('Save',this.product)
     },
     async getCategory() {
-      var result = await this.$axios.$get('/api/Category/GetAll');
-      this.Categories = result.result
+      let result = await this.$axios.$get('/api/Category/GetAll');
+      this.categories = result.result
     },
     async getDetail(){
       if (this.id > 0) {
-        var value = await this.$axios.$get(`/api/Cource/GetById/?Id=${this.id}`);
+        let value = await this.$axios.$get(`/api/Cource/GetById/?Id=${this.id}`);
         this.product = value.result;
       }else{
         this.product = {}
