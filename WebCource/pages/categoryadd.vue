@@ -16,14 +16,14 @@
         <td>
           <div class="d-grid gap-2 d-md-block">
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"  @click="DeleteOk(item.id)">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"  @click="deleteOk(item.id)">
               X
             </button>
           </div>
         </td>
         <td>
           <div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"  @click="Edit(item.id)">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"  @click="edit(item.id)">
               Sửa
             </button>
           </div>
@@ -32,10 +32,10 @@
       </tbody>
     </table>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-      <button class="btn btn-primary me-md-2" type="button" @click="() => {addCategoryShow = !addCategoryShow;modalShow = true}">Thêm danh mục</button>
+      <button class="btn btn-primary me-md-2" type="button" @click="()=> {modalShow = !modalShow; id = 0;showIdInputEdit = false; editTitleCategory ='Thêm danh mục'}">Thêm danh mục</button>
     </div>
     <Transition>
-      <EditCategory :show-modal="addCategoryShow" v-if="modalShow" :category="Category" @Save="addCategory" :showInputId="false"></EditCategory>
+      <EditCategory @ok="editOk" :title="editTitleCategory" v-if="modalShow" :id="id" :showInputId="showIdInputEdit" @closeModal="modalShow = false"></EditCategory>
     </Transition>
   </div>
 </template>
@@ -49,59 +49,35 @@ export default {
   data(){
     return {
       itemsCategory : null,
-      modalShow : true,
-      addCategoryShow : false,
-      editCategory : false,
-      Category : {
-        id : 0,
-        name : ""
-      },
-      id : 0
+      modalShow : false,
+      showIdInputEdit : false,
+      id : 0,
+      editTitleCategory : ""
     }
   },
   async created() {
-    await this.GetCategory();
+    await this.getCategory();
   },
 
   methods :{
-    async GetCategory(){
-      var result = await this.$axios.$get('/api/Category/GetAll');
+    async getCategory(){
+      let result = await this.$axios.$get('/api/Category/GetAll');
       this.itemsCategory = result.result;
     },
-    async Edit(id){
-        this.modalShow = false
-        this.editCategory = !this.editCategory;
-        if (id > 0){
-          let response = await this.$axios.$get(`/api/Category/GetById/?Id=${id}`);
-          let item = response.result
-          this.Category.name = item.name
-          this.Category.id = item.id
-        }
-
+   async editOk(){
+      await this.getCategory();
+      this.modalShow = false;
     },
-   async addCategory(item){
-      await this.$axios.post('/api/Category/AddCategory',{
-        name : item.name
-      });
-      this.addCategoryShow = false;
-     await this.GetCategory();
+    edit(id){
+        this.editTitleCategory = "Sửa danh mục";
+        this.modalShow = !this.modalShow;
+        this.showIdInputEdit = true
+        this.id = id;
     },
-    async DeleteOk(id){
+    async deleteOk(id){
       await  this.$axios.$delete(`/api/Category/Delete/?Id=${id}`);
     },
-    async SaveCategory(item){
-      console.log(item)
-      if(item.id > 0){
-        await  this.$axios.post('/api/Category/Save',{
-          id : item.id,
-          name : item.name
-        });
-      }
-      this.addCategoryShow = !this.addCategoryShow;
-      this.modalShow = true;
-      this.editCategory = false;
-      await this.GetCategory();
-    }
+
   }
 }
 </script>

@@ -1,10 +1,23 @@
 <template>
   <div class="modal-vue">
-    <div class="overlay" @click="CloseModal"></div>
+    <div class="overlay" @click="closeModal"></div>
     <div class="modal">
-      <button class="close" @click="CloseModal">x</button>
+      <button class="close" @click="closeModal">x</button>
       <h3>{{title}}</h3>
       <div class="main-product-add">
+        <b-form-group
+          v-if="showIdInput"
+          label="Id"
+          label-for="name-input"
+          invalid-feedback="Id is required"
+        >
+          <b-form-input
+            id="name-input"
+            v-model="product.id"
+            required
+          >
+          </b-form-input>
+        </b-form-group>
         <b-form-group
           label="Title"
           label-for="name-input"
@@ -45,7 +58,7 @@
         >
           <b-form-input
             id="name-input"
-            v-model="product.price"
+            v-model:value="product.price"
             required
           ></b-form-input>
         </b-form-group>
@@ -66,6 +79,10 @@
 export default {
   name: "EditProduct.vue",
   props: {
+    showIdInput : {
+      type : Boolean,
+      default : false
+    },
     id: {
       type: Number,
       default: 0
@@ -75,13 +92,12 @@ export default {
       default: ''
     }
   },
-  emits: ['Save'],
+  emits: ['closeModal','save'],
   data() {
     return {
       valueInputTitle: "",
       product: {},
-      categories: null,
-      id: 0
+      categories: [],
     }
   },
   async created() {
@@ -90,10 +106,28 @@ export default {
   },
   methods : {
     closeModal(){
-      this.$emit('close')
+      this.$emit('closeModal')
     },
-    save(){
-      this.$emit('Save',this.product)
+   async save(){
+      if (this.id > 0) {
+        await this.$axios.post('/api/Cource/Save', {
+          id: this.product.id,
+          title: this.product.title,
+          description: this.product.description,
+          image: this.product.image,
+          price: this.product.price,
+          categoryId: this.product.categoryId
+        });
+      }else {
+        await this.$axios.post("/api/Cource/Add", {
+          title: this.product.title,
+          description: this.product.description,
+          image: this.product.image,
+          price: this.product.price,
+          categoryId: this.product.categoryId
+        })
+      }
+      this.$emit('save')
     },
     async getCategory() {
       let result = await this.$axios.$get('/api/Category/GetAll');

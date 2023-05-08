@@ -38,12 +38,12 @@
       </tr>
     </table>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-      <button class="btn btn-primary me-md-2" type="button" @click="()=>{modalShow = true; id = 0}">Thêm sản
+      <button class="btn btn-primary me-md-2" type="button" @click="()=>{modalShow = true; id = 0; showIdEditProduct = false; TitleEditProduct= 'Thêm sản phẩm'}">Thêm sản
         phẩm
       </button>
     </div>
     <Transition >
-      <EditProduct @save="addProduct" :id="id" v-if="modalShow" @close="closeForm()"></EditProduct>
+      <EditProduct @save="saveEdit" :title="TitleEditProduct" :id="id" :show-id-input="showIdEditProduct" v-if="modalShow" @closeModal="modalShow = false"></EditProduct>
     </Transition>
   </div>
 </template>
@@ -55,30 +55,17 @@ export default {
   data() {
     return {
       cource: [],
-      ValueInputTitle: "",
+      showIdEditProduct : false,
       modalShow: false,
-
-      Product: {
-        Id: "",
-        Title: "",
-        Description: "",
-        Price: 0,
-        Image: "",
-        categoriesId: ""
-      },
       categories: null,
-      addProductShow: false,
-      editShow: false,
-      id: 0
+      id: 0,
+      TitleEditProduct : ""
     }
   },
   async created() {
     await this.getList();
   },
   methods: {
-    closeForm(){
-      this.modalShow = false
-    },
     async getList() {
       let ip = await this.$axios.$get('/api/Cource/GetAll');
       this.cource = ip.result;
@@ -87,10 +74,15 @@ export default {
       await this.$axios.$delete(`/api/Cource/Delete/?Id=${id}`);
       await this.getList();
     },
-
-    async editProduct(id) {
-      this.id= id
-      this.modalShow = true
+    async saveEdit(){
+      await this.getList();
+      this.modalShow = false
+    },
+    editProduct(id) {
+      this.TitleEditProduct = 'Sửa sản phẩm'
+      this.showIdEditProduct = true;
+      this.id= id;
+      this.modalShow = true;
     },
 
     async addProduct(Product) {
@@ -107,18 +99,7 @@ export default {
         await this.getList();
       }
     },
-    async SaveProduct() {
-      await this.$axios.post('/api/Cource/Save', {
-        id: this.updateCource.Id,
-        title: this.updateCource.Title,
-        description: this.updateCource.Description,
-        image: this.updateCource.Image,
-        price: this.updateCource.Price,
-        categoryId: this.updateCource.categoriesId
-      });
-      this.editShow = false;
-      await this.getList();
-    },
+
   }
 }
 </script>

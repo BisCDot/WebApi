@@ -1,7 +1,9 @@
 <template>
   <div class="modal-vue">
-    <div class="modal" >
-      <h3>{{title}}</h3>
+    <div class="overlay" @click="closeModal"></div>
+    <div class="modal">
+      <button class="close" @click="closeModal">x</button>
+      <h3>{{ title }}</h3>
       <form ref="form">
         <div v-if="showInputId">
           <b-form-group
@@ -16,20 +18,20 @@
           </b-form-group>
         </div>
 
-      <b-form-group
-        label="Name"
-        label-for="name-input"
-        invalid-feedback="Name is required"
-      >
-        <b-form-input
-          id="name-input"
-          v-model="categories.name"
-          required
-        ></b-form-input>
-      </b-form-group>
+        <b-form-group
+          label="Name"
+          label-for="name-input"
+          invalid-feedback="Name is required"
+        >
+          <b-form-input
+            id="name-input"
+            v-model="categories.name"
+            required
+          ></b-form-input>
+        </b-form-group>
       </form>
       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button class="btn btn-primary me-md-2" type="button" @click="save">Ok</button>
+        <button class="btn btn-primary me-md-2" type="button" @click="ok">Ok</button>
       </div>
     </div>
   </div>
@@ -39,40 +41,56 @@
 export default {
   name: "EditCategory",
   async created() {
-   await this.getDetail()
+    await this.getCategory();
+    await this.getDetail();
   },
   props: {
-    id : {
-      type : Number,
-      default : 0
+    showInputId: {
+      type: Boolean,
+      default: false
     },
-    title : {
-      type : String,
+    id: {
+      type: Number,
+      default: 0
+    },
+    title: {
+      type: String,
       default: ""
     }
   },
-  data(){
+  data() {
     return {
-      categories : {}
+      categories: {},
+      modalShow: false
     }
   },
-  emits : ['Save'],
-  methods : {
-    closeModal(){
-        this.showModal = !this.showModal;
+  emits: ['ok', 'closeModal'],
+  methods: {
+    closeModal() {
+      this.$emit('closeModal')
     },
-    save(Category){
-      this.$emit('Save',Category)
+    async ok() {
+      if (this.id > 0) {
+        await this.$axios.post('/api/Category/Save', {
+          id: this.categories.id,
+          name: this.categories.name
+        });
+      } else {
+        await this.$axios.post('/api/Category/AddCategory',{
+          name : this.categories.name
+        });
+      }
+      this.$emit('ok')
     },
     async getCategory() {
-      let result = await this.$axios.$get('/api/Category/GetAll');
-      this.Categories = result.result
+      let value = await this.$axios.$get('/api/Category/GetAll');
+      this.categories = value.result
     },
-    async getDetail(){
-      if(this.id > 0){
-        let value =  await this.$axios.$get(`/api/Category/GetById/?id= ${this.id}`)
+    async getDetail() {
+      if (this.id > 0) {
+        let value = await this.$axios.$get(`/api/Category/GetById/?Id=${this.id}`)
         this.categories = value.result;
-      }else {
+      } else {
         this.categories = {}
       }
     }
@@ -81,9 +99,10 @@ export default {
 </script>
 
 <style scoped>
-.modal{
+.modal {
   display: block;
 }
+
 .modal-vue .overlay {
   position: fixed;
   z-index: 998;
@@ -108,7 +127,7 @@ export default {
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-.modal-vue .close{
+.modal-vue .close {
   position: absolute;
   top: 10px;
   right: 10px;
