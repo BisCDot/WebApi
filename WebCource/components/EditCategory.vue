@@ -13,7 +13,8 @@
           >
             <b-form-input
               id="name-input"
-              v-model="categories.id"
+              v-model="category.id"
+              disabled
             ></b-form-input>
           </b-form-group>
         </div>
@@ -25,7 +26,8 @@
         >
           <b-form-input
             id="name-input"
-            v-model="categories.name"
+            v-bind:value="category.name"
+            v-on:input="updateName"
             required
           ></b-form-input>
         </b-form-group>
@@ -41,7 +43,6 @@
 export default {
   name: "EditCategory",
   async created() {
-    await this.getCategory();
     await this.getDetail();
   },
   props: {
@@ -60,8 +61,9 @@ export default {
   },
   data() {
     return {
-      categories: {},
-      modalShow: false
+      modalShow: false,
+      category : {},
+
     }
   },
   emits: ['ok', 'closeModal'],
@@ -69,32 +71,32 @@ export default {
     closeModal() {
       this.$emit('closeModal')
     },
+    updateName(e){
+        this.$store.commit('category/SET_NAME_CATEGORY',e)
+    },
     async ok() {
       if (this.id > 0) {
-        await this.$axios.post('/api/Category/Save', {
-          id: this.categories.id,
-          name: this.categories.name
-        });
+          await  this.$store.dispatch('category/save',this.category);
       } else {
-        await this.$axios.post('/api/Category/AddCategory',{
-          name : this.categories.name
-        });
+          await  this.$store.dispatch('category/add',this.categories);
       }
       this.$emit('ok')
     },
-    async getCategory() {
-      let value = await this.$axios.$get('/api/Category/GetAll');
-      this.categories = value.result
-    },
     async getDetail() {
       if (this.id > 0) {
-        let value = await this.$axios.$get(`/api/Category/GetById/?Id=${this.id}`)
-        this.categories = value.result;
+        await  this.$store.dispatch('category/getById',this.id)
+        this.category = this.categories;
       } else {
-        this.categories = {};
+        this.$store.commit('category/SET_CATEGORY',{})
       }
     }
+  },
+  computed : {
+    categories(){
+      return this.$store.getters["category/category"]
+    }
   }
+
 }
 </script>
 

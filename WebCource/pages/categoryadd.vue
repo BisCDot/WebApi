@@ -48,7 +48,6 @@ export default {
   layout: 'default',
   data(){
     return {
-      itemsCategory : null,
       modalShow : false,
       showIdInputEdit : false,
       id : 0,
@@ -61,8 +60,7 @@ export default {
 
   methods :{
     async getCategory(){
-      let result = await this.$axios.$get('/api/Category/GetAll');
-      this.itemsCategory = result.result;
+      await this.$store.dispatch('category/getCategory');
     },
    async editOk(){
       await this.getCategory();
@@ -75,9 +73,15 @@ export default {
         this.id = id;
     },
     async deleteOk(id){
-      await  this.$axios.$delete(`/api/Category/Delete/?Id=${id}`);
+      await  this.$store.dispatch('category/delete',id);
+      await this.getCategory();
     },
 
+  },
+  computed : {
+    itemsCategory(){
+      return this.$store.getters['category/listCategory']
+    }
   }
 }
 </script>
