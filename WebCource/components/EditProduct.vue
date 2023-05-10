@@ -25,7 +25,8 @@
         >
           <b-form-input
             id="name-input"
-            v-model="product.title"
+            v-bind:value="product.title"
+            v-on:input="updateTitle"
             required
           ></b-form-input>
         </b-form-group>
@@ -36,7 +37,8 @@
         >
           <b-form-input
             id="name-input"
-            v-model="product.description"
+            v-bind:value="product.description"
+            v-on:input="updateDescription"
             required
           ></b-form-input>
         </b-form-group>
@@ -47,7 +49,8 @@
         >
           <b-form-input
             id="name-input"
-            v-model="product.image"
+            v-bind:value="product.image"
+            v-on:input="updateImage"
             required
           ></b-form-input>
         </b-form-group>
@@ -58,11 +61,14 @@
         >
           <b-form-input
             id="name-input"
-            v-model:value="product.price"
+            v-bind:value="product.price"
+            v-on:input="updatePrice"
             required
           ></b-form-input>
         </b-form-group>
-          <select class="form-select form-select-sm" aria-label=".form-select-sm example"  v-model="product.categoryId" >
+          <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                  v-bind:value="product.categoryId"
+                  v-on:input="updateCategory" >
             <option selected>Chọn danh mục</option>
             <option v-for="item in categories" :value="item.id">
               {{item.name}}
@@ -96,8 +102,8 @@ export default {
   data() {
     return {
       valueInputTitle: "",
-      product: {},
       categories: [],
+      product : {},
     }
   },
   async created() {
@@ -108,24 +114,26 @@ export default {
     closeModal(){
       this.$emit('closeModal')
     },
-   async save(){
+    updateTitle(e){
+        this.$store.commit('product/SET_PRODUCT_TITLE',e)
+    },
+    updateDescription(e){
+      this.$store.commit('product/SET_PRODUCT_DESCRIPTION',e)
+    },
+    updateImage(e){
+      this.$store.commit('product/SET_PRODUCT_IMAGE',e)
+    },
+    updatePrice(e){
+      this.$store.commit('product/SET_PRODUCT_PRICE',e)
+    },
+    updateCategory(e){
+      this.$store.commit('product/SET_PRODUCT_CATEGORY',e)
+    },
+    async save(){
       if (this.id > 0) {
-        await this.$axios.post('/api/Cource/Save', {
-          id: this.product.id,
-          title: this.product.title,
-          description: this.product.description,
-          image: this.product.image,
-          price: this.product.price,
-          categoryId: this.product.categoryId
-        });
+          await this.$store.dispatch('product/save',this.product)
       }else {
-        await this.$axios.post("/api/Cource/Add", {
-          title: this.product.title,
-          description: this.product.description,
-          image: this.product.image,
-          price: this.product.price,
-          categoryId: this.product.categoryId
-        })
+          await  this.$store.dispatch('product/add',this.product)
       }
       this.$emit('save')
     },
@@ -135,12 +143,19 @@ export default {
     },
     async getDetail(){
       if (this.id > 0) {
-        let value = await this.$axios.$get(`/api/Cource/GetById/?Id=${this.id}`);
-        this.product = value.result;
+        await this.$store.dispatch('product/getById',this.id);
+        this.product = this.course;
       }else{
         this.product = {}
       }
-    }
+    },
+
+  },
+  computed : {
+      course(){
+        return this.$store.getters["product/course"]
+      }
+
   }
 }
 </script>

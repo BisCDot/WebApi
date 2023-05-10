@@ -91,7 +91,7 @@ export default {
         let value = await this.$axios.$get(`/api/Category/GetById/?Id=${this.id}`)
         this.categories = value.result;
       } else {
-        this.categories = {}
+        this.categories = {};
       }
     }
   }

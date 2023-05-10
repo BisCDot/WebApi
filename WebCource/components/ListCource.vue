@@ -54,7 +54,6 @@ export default {
   name: "ListCource.vue",
   data() {
     return {
-      cource: [],
       showIdEditProduct : false,
       modalShow: false,
       categories: null,
@@ -66,12 +65,11 @@ export default {
     await this.getList();
   },
   methods: {
-    async getList() {
-      let ip = await this.$axios.$get('/api/Cource/GetAll');
-      this.cource = ip.result;
+     async getList() {
+       await this.$store.dispatch('product/getList')
     },
     async deleteOk(id) {
-      await this.$axios.$delete(`/api/Cource/Delete/?Id=${id}`);
+      await this.$store.dispatch('product/delete',id)
       await this.getList();
     },
     async saveEdit(){
@@ -84,22 +82,11 @@ export default {
       this.id= id;
       this.modalShow = true;
     },
-
-    async addProduct(Product) {
-      console.log(Product)
-      if (Product != null) {
-        await this.$axios.post("/api/Cource/Add", {
-          title: Product.title,
-          description: Product.description,
-          image: Product.image,
-          price: Product.price,
-          categoryId: Product.categoryId
-        })
-        this.addProductShow = !this.addProductShow;
-        await this.getList();
+  },
+  computed : {
+      cource(){
+        return this.$store.getters['product/listCourse']
       }
-    },
-
   }
 }
 </script>
