@@ -9,7 +9,7 @@ using Web.Entity;
 
 namespace Web.DAL.Cource
 {
-    public interface ICourceRepository : IGenericRepository<CourceEntity,MainDbContext>
+    public interface ICourceRepository : IGenericRepository<CourseEntity,MainDbContext>
     {
         
     }

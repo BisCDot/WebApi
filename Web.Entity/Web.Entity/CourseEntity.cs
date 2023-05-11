@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Web.Entity
 {
-    public class CourceEntity
+    public class CourseEntity
     {
         public long Id { get; set; }
         [Required]
@@ -19,7 +19,8 @@ namespace Web.Entity
         public double Price { get; set; }
         [Required]
         public string Image { get; set; }
-        public DateTime CreateDatatime { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public int Status { get; set; }
         public long CategoryId { get; set; }
         public virtual CategoryEntity Category { get; set; }
     }

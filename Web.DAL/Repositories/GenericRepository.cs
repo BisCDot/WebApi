@@ -3,15 +3,25 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
 using Web.DAL.Common;
+using Web.Entity.Resource;
 
 namespace Web.DAL.Repositories
 {
+    public class FilterResult<TEntity>
+    {
+        public int TotalRows { get; set; }
+        public IEnumerable<TEntity> Data { get; set; }
+    }
     public class GenericRepository<TEntity,TContext> : IGenericRepository<TEntity,TContext> where TEntity : class where TContext : DbContext
     {
         protected readonly TContext Context;
@@ -103,6 +113,51 @@ namespace Web.DAL.Repositories
             }
             _dbSet.Update(entity);
             return entity;
+        }
+
+        public FilterResult<TResource> Filter<TResource>(PagingParam<TResource> pagingParams,
+            params Expression<Func<TResource, bool>>[] predicates) where TResource : class
+        {
+            var pageIndex = pagingParams.PageIndex;
+            var pageSize = pagingParams.PageSize;
+            bool isFilterPage = pageIndex > 0 &&  pageSize > 0;
+            if (pagingParams == null)
+            {
+                throw new ArgumentException("pagingParams");
+            }
+
+            var result = new FilterResult<TResource>();
+            IQueryable<TResource> query = Context.Set<TEntity>().ProjectTo<TResource>(_mapper.ConfigurationProvider);
+            var pagingPredicates = pagingParams.GetPredicates();
+            if (predicates != null)
+            {
+                pagingPredicates.AddRange(predicates.ToList());
+                predicates = pagingPredicates.ToArray();
+            }
+
+            foreach (var item in predicates)
+            {
+                query = query.Where(item);
+            }
+
+            if (isFilterPage)
+            {
+                result.TotalRows = query.Count();
+            }
+            // Ordering
+            if (!string.IsNullOrEmpty(pagingParams.SortExpression))
+                query = query.OrderBy(pagingParams.SortExpression);
+            else
+            {
+                if (typeof(TEntity).GetProperty("Id") != null)
+                    query = query.OrderBy("Id desc");
+                else if (isFilterPage)
+                    throw new ArgumentNullException("SortExpression require");
+            }
+            if (isFilterPage)
+                query = query.Skip((pageIndex - 1) * pageSize + pagingParams.Skip).Take(pageSize);
+            result.Data = query.ToList();
+            return result;
         }
     }
 }

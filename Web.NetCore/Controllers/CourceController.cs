@@ -9,36 +9,41 @@ namespace Web.NetCore.Controllers
     [ApiController]
     public class CourceController : Controller
     {
-        private readonly ICourceBLL _courceBLL;
+        private readonly ICourseBLL _courseBll;
 
-        public CourceController(ICourceBLL courceBLL)
+        public CourceController(ICourseBLL courseBll)
         {
-            _courceBLL = courceBLL;
+            _courseBll = courseBll;
         }
         [HttpPost]
-        public async Task<object> Add([FromBody]CourceResource cource)
+        public async Task<object> Add([FromBody]CourseResource course)
         {
-            return await _courceBLL.Add(cource);
+            return await _courseBll.Add(course);
+        }
+        [HttpPost]
+        public object List(CourseFillterResource filter)
+        {
+            return _courseBll.GetList(filter);
         }
         [HttpGet]
         public async Task<object> GetAll()
         {
-            return await _courceBLL.GetAll();
+            return await _courseBll.GetAll();
         }
         [HttpDelete]
         public async Task<object> Delete(long Id)
         {
-            return await _courceBLL.Delete(Id);
+            return await _courseBll.Delete(Id);
         }
         [HttpPost]
-        public async Task<object> Save(CourceResource cource)
+        public async Task<object> Save(CourseResource course)
         {
-            return await _courceBLL.Save(cource);
+            return await _courseBll.Save(course);
         }
         [HttpGet]
         public async Task<object> GetById(long id)
         {
-            return await _courceBLL.GetById(id);
+            return await _courseBll.GetById(id);
         }
     }
 }

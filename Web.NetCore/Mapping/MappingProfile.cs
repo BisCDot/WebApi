@@ -8,8 +8,8 @@ namespace Web.NetCore.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<CourceEntity, CourceResource>();
-            CreateMap<CourceResource, CourceEntity>();
+            CreateMap<CourseEntity, CourseResource>();
+            CreateMap<CourseResource, CourseEntity>();
             CreateMap<CategoryEntity, CategoryResource>();
             CreateMap<CategoryResource,CategoryEntity>();
         }

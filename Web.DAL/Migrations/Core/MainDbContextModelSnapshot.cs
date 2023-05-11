@@ -34,7 +34,7 @@ namespace Web.DAL.Migrations.Core
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Web.Entity.CourceEntity", b =>
+            modelBuilder.Entity("Web.Entity.CourseEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -69,7 +69,7 @@ namespace Web.DAL.Migrations.Core
                     b.ToTable("Courcess");
                 });
 
-            modelBuilder.Entity("Web.Entity.CourceEntity", b =>
+            modelBuilder.Entity("Web.Entity.CourseEntity", b =>
                 {
                     b.HasOne("Web.Entity.CategoryEntity", "Category")
                         .WithMany()

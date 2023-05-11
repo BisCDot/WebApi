@@ -11,7 +11,7 @@ namespace Web.DAL.Common
 {
     public class MainDbContext : DbContext
     {
-        public virtual DbSet<CourceEntity> Courcess { get; set; }
+        public virtual DbSet<CourseEntity> Courcess { get; set; }
         public virtual DbSet<CategoryEntity> Categories { get; set; }
         public MainDbContext(DbContextOptions<MainDbContext> options) : base (options)
         {

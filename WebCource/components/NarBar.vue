@@ -9,11 +9,6 @@
         <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link" >
-              <nuxt-link to="/productaddfrom">Thêm sản phẩm</nuxt-link>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" >
               <nuxt-link to="/categoryadd">Quản lý danh mục</nuxt-link>
             </a>
           </li>

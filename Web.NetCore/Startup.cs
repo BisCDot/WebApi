@@ -47,7 +47,7 @@ namespace Web.NetCore
                 builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
             services.AddTransient<IUnitofWork<MainDbContext>, UnitOfWork<MainDbContext>>();
-            services.AddTransient<ICourceBLL, CourceBLL>();
+            services.AddTransient<ICourseBLL, CourseBLL>();
             services.AddScoped<ICourceRepository, CourceRepository>();
             services.AddScoped<ICategoryBLL, CategoryBLL>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();

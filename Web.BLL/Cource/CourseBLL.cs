@@ -6,35 +6,36 @@ using System.Text;
 using System.Threading.Tasks;
 using Web.DAL.Common;
 using Web.DAL.Cource;
+using Web.DAL.Repositories;
 using Web.Entity;
 using Web.Entity.Resource;
 
 namespace Web.BLL.Cource
 {
-    public class CourceBLL : ICourceBLL
+    public class CourseBLL : ICourseBLL
     {
         private readonly IUnitofWork<MainDbContext> _unitofWork;
         private readonly IMapper _mapper;
         private readonly ICourceRepository _courceRepository;
-        public CourceBLL(IUnitofWork<MainDbContext> unitofWork, ICourceRepository ModuleRepository, IMapper mapper) 
+        public CourseBLL(IUnitofWork<MainDbContext> unitofWork, ICourceRepository ModuleRepository, IMapper mapper) 
         {
             _unitofWork = unitofWork;
             _courceRepository = ModuleRepository;
             _mapper = mapper;
         }
-       public async Task<bool> Add(CourceResource entity)
+       public async Task<bool> Add(CourseResource entity)
         {
-            var obj = _mapper.Map<CourceResource, CourceEntity>(entity);
+            var obj = _mapper.Map<CourseResource, CourseEntity>(entity);
             if (obj != null)
             {
-                var cource = new CourceEntity()
+                var cource = new CourseEntity()
                 {
                     Title = obj.Title,
                     Image = obj.Image,
                     Price = obj.Price,
                     Description = obj.Description,
-                    CreateDatatime = DateTime.Now,
                     CategoryId = obj.CategoryId
+                    
                 };
                 await _courceRepository.AddAsync(cource);
                 await _unitofWork.SaveChangesAsync();
@@ -44,7 +45,7 @@ namespace Web.BLL.Cource
            
         }
 
-        public async Task<CourceEntity> GetById(long Id)
+        public async Task<CourseEntity> GetById(long Id)
         {
             return await _courceRepository.GetByIdAsync(Id);
         }
@@ -61,15 +62,19 @@ namespace Web.BLL.Cource
             return false;
         }
 
-        public async Task<IEnumerable<CourceEntity>> GetAll()
+        public FilterResult<CourseResource> GetList(CourseFillterResource filter)
         {
-
+            
+            return _courceRepository.Filter(filter);
+        }
+        public async Task<IEnumerable<CourseEntity>> GetAll()
+        {
             return await _courceRepository.GetAllAsync();
         }
         
-        public async Task<bool> Save(CourceResource entity)
+        public async Task<bool> Save(CourseResource entity)
         {
-            var obj = _mapper.Map<CourceResource, CourceEntity>(entity);
+            var obj = _mapper.Map<CourseResource, CourseEntity>(entity);
             if (obj.Id > 0)
                 _courceRepository.Update(obj);
             else

@@ -9,6 +9,7 @@
         <th scope="col">Description</th>
         <th scope="col">Image</th>
         <th scope="col">Price</th>
+        <th scope="col">Danh Mục</th>
         <th scope="col"></th>
         <th scope="col"></th>
       </tr>
@@ -20,6 +21,7 @@
         <td>{{ item.description }}</td>
         <td><img class="image-list" :src="item.image"></td>
         <td>{{ item.price }}</td>
+        <td>{{}}</td>
         <td>
           <div class="d-grid gap-2 d-md-block">
             <!-- Button trigger modal -->
@@ -42,7 +44,7 @@
         phẩm
       </button>
     </div>
-    <Transition >
+    <Transition>
       <EditProduct @save="saveEdit" :title="TitleEditProduct" :id="id" :show-id-input="showIdEditProduct" v-if="modalShow" @closeModal="modalShow = false"></EditProduct>
     </Transition>
   </div>
@@ -58,7 +60,7 @@ export default {
       modalShow: false,
       categories: null,
       id: 0,
-      TitleEditProduct : ""
+      TitleEditProduct : "",
     }
   },
   async created() {
@@ -71,6 +73,9 @@ export default {
     async deleteOk(id) {
       await this.$store.dispatch('product/delete',id)
       await this.getList();
+    },
+    async getCategoryById(id){
+      await  this.$store.dispatch('category/getById',id)
     },
     async saveEdit(){
       await this.getList();
@@ -86,7 +91,7 @@ export default {
   computed : {
       cource(){
         return this.$store.getters['product/listCourse']
-      }
+      },
   }
 }
 </script>
