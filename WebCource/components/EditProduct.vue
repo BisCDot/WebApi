@@ -134,7 +134,7 @@ export default {
       if (this.id > 0) {
           await this.$store.dispatch('product/save',this.product)
       }else {
-          await  this.$store.dispatch('product/add',this.course)
+          await  this.$store.dispatch('product/save',this.course)
       }
       this.$emit('save')
     },

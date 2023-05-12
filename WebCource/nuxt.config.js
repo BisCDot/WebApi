@@ -22,7 +22,7 @@ export default {
   ssr: false,
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-
+    {src : '@/plugins/common.js',ssr : false}
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -38,7 +38,7 @@ export default {
     'bootstrap-vue/nuxt',
     '@nuxtjs/axios'
   ],
-  axios: { baseURL: 'http://localhost:5000' },
+  axios: { baseURL: 'http://localhost:5555' },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }

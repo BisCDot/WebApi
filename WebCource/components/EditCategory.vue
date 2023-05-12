@@ -87,7 +87,7 @@ export default {
         await  this.$store.dispatch('category/getById',this.id)
         this.category = this.categories;
       } else {
-        this.$store.commit('category/SET_CATEGORY',{})
+        this.$store.commit('category/SET_CATEGORY',{});
       }
     }
   },

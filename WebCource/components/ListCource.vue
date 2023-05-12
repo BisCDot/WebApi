@@ -1,9 +1,43 @@
 <template>
   <div>
+    <div class="filter">
+      <div class="search">
+        <form action="/search" class="input-search" method="get">
+          <input
+            type="search"
+            placeholder="Tìm kiếm sản phẩm..."
+            spellcheck="false"
+            id="queryFind"
+          />
+          <span class="bi-search">
+            <div class="bi-search-icon"></div>
+          </span>
+        </form>
+      </div>
+      <div class="filter-price">
+        <span class="filter-title">Giá tiền</span>
+        <range-slider
+          class="slider"
+          :min="minPrice"
+          max="10000000"
+          step="10"
+          v-model="maxPrice"
+          @change="filterPrice"
+        >
+        </range-slider>
+        <div class="filter-price-input">
+          <label class="name-input">Từ</label>
+          <label class="input-name">Đến</label>
+          <input type="number" v-model="pagingParamFilter.minPrice">
+          <input type="text" v-model="maxPrice">
+        </div>
+      </div>
+    </div>
+
     <table class="table">
+
       <thead class="table-dark">
       <tr>
-        <th scope="col">#</th>
         <th scope="col">Id</th>
         <th scope="col">title</th>
         <th scope="col">Description</th>
@@ -14,8 +48,7 @@
         <th scope="col"></th>
       </tr>
       </thead>
-      <tr v-for="item in cource">
-        <th scope="row"></th>
+      <tr v-for="item in cource.data">
         <td>{{ item.id }}</td>
         <td>{{ item.title }}</td>
         <td>{{ item.description }}</td>
@@ -47,11 +80,20 @@
     <Transition>
       <EditProduct @save="saveEdit" :title="TitleEditProduct" :id="id" :show-id-input="showIdEditProduct" v-if="modalShow" @closeModal="modalShow = false"></EditProduct>
     </Transition>
+    <div class="overflow-auto">
+      <b-pagination
+        @page-click="paginationClick"
+        v-model="pagingParamFilter.pageIndex"
+        :total-rows="cource.totalRows"
+        :per-page="pagingParamFilter.pageSize"
+        aria-controls="my-table"
+      ></b-pagination>
+    </div>
   </div>
 </template>
 
 <script>
-
+import 'vue-range-slider/dist/vue-range-slider.css'
 export default {
   name: "ListCource.vue",
   data() {
@@ -59,16 +101,59 @@ export default {
       showIdEditProduct : false,
       modalShow: false,
       categories: null,
+      minPrice : 0,
+      maxPrice : 0,
       id: 0,
       TitleEditProduct : "",
+      pagingParamFilter : {
+        sortExpression: "",
+        pageSize: 2,
+        pageIndex: 1,
+        skip: 0,
+        notSkip: 0,
+        minPrice: 0,
+        maxPrice: 0,
+        status: 0,
+        keyWord: ""
+      }
     }
   },
   async created() {
     await this.getList();
   },
   methods: {
-     async getList() {
-       await this.$store.dispatch('product/getList')
+    filterPrice() {
+      if (this.maxPrice > 0){
+        this.$store.dispatch('product/getList',{
+          sortExpression: "",
+          pageSize: 0,
+          pageIndex: 0,
+          skip: 0,
+          notSkip: 0,
+          minPrice: 1,
+          maxPrice: this.maxPrice,
+          status: 0,
+          keyWord: ""
+        })
+      }else{
+        this.getList();
+      }
+    },
+    paginationClick(event, pageNumber){
+      this.$store.dispatch('product/getList',{
+        sortExpression: "",
+        pageSize: this.pagingParamFilter.pageSize,
+        pageIndex: pageNumber,
+        skip: 0,
+        notSkip: 0,
+        minPrice: 0,
+        maxPrice: 0,
+        status: 0,
+        keyWord: ""
+      });
+    },
+    getList() {
+      this.$store.dispatch('product/getList',this.pagingParamFilter)
     },
     async deleteOk(id) {
       await this.$store.dispatch('product/delete',id)
@@ -100,5 +185,105 @@ export default {
 .image-list {
   height: 50px;
   width: 50px;
+}
+.overflow-auto{
+}
+.slider{
+  float: right;
+  width: 200px;
+  line-height: 50px;
+}
+.filter{
+  height: 60px;
+}
+.search {
+  display: flex;
+  margin: 0px;
+  height: 100%;
+  float: left;
+  outline: none;
+}
+
+.search .input-search {
+  margin: auto;
+  width: 500px;
+  height: 35px;
+  display: flex;
+  border: 1px solid #7f7f7f;
+  background-color: white;
+  justify-content: space-between;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  outline: 3px solid transparent;
+}
+
+.search .input-search:focus-within {
+}
+
+.search .input-search span {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.search .input-search .bi-search {
+  padding-right: 1rem;
+  margin-left: 10px;
+  cursor: pointer;
+  padding-left: 1rem;
+  background: url('@/assets/icon/search.svg');
+  background-position: 3px 10px;
+  background-repeat: no-repeat;
+}
+.bi-search-icon {
+
+}
+
+.search .input-search .bi-search:hover {
+  color: #2d4bf0;
+}
+.search .input-search input {
+  padding: 0 0.5rem 0 1rem;
+  width: 100%;
+  font-size: 15px;
+  color: #1d1d1d;
+  border: 1px solid black;
+}
+.filter-price {
+  position: relative;
+}
+.filter-title{
+  position: absolute;
+  top: 0;
+  margin-right: 207px;
+  right: 0;
+  font-weight: 600;
+}
+.filter-price-input{
+  position: relative;
+}
+.filter-price-input .name-input {
+  float: right;
+  font-weight: 500;
+  margin-top: 26px;
+}
+.filter-price-input .input-name{
+  position: absolute;
+  font-weight: 500;
+  right: 0;
+  margin-top: 25px;
+  padding-right: 60px;
+}
+.filter-price-input > input[type="text"]{
+  position: absolute;
+  right: 0;
+  width: 100px;
+  margin-top: 60px;
+}
+.filter-price-input > input[type="number"]{
+  position: absolute;
+  width: 100px;
+  right: 167px;
+  margin-top: 60px;
 }
 </style>

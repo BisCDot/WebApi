@@ -5,6 +5,7 @@ export default {
     state : () => ({
         listCourse  : [],
         course : {},
+
     }),
     mutations : {
       SET_LIST : (state,data) => {
@@ -31,6 +32,21 @@ export default {
     },
     actions : {
       getList({commit},data) {
+        return new Promise((resolve, reject) => {
+          return this.$axios
+            .post(`${apiUrl.ORGANIZATION_COURCE}List`,data)
+            .then((response) => {
+              commit('SET_LIST', response.data.result);
+              return resolve(response.data.result);
+
+            })
+            .catch((err) => {
+              commit('SET_LIST', null);
+              return reject(err)
+            })
+        })
+      },
+      getAll({commit},data) {
         return new Promise((resolve, reject) => {
           return this.$axios
             .get(apiUrl.ORGANIZATION_GET_LIST_COURCE)
@@ -99,6 +115,5 @@ export default {
     getters: {
         listCourse : state => state.listCourse,
         course : state => state.course,
-
     },
 }
