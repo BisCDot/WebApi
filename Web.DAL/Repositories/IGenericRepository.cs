@@ -21,5 +21,9 @@ namespace Web.DAL.Repositories
         void RemoveRange(IEnumerable<TEntity> entities);
         FilterResult<TResource> Filter<TResource>(PagingParam<TResource> pagingParams, params Expression<Func<TResource, bool>>[] predicates)
             where TResource : class;
+
+        Task<FilterResult<TEntity>> FilterWithIncludes(PagingParam<TEntity> pagingParams,
+            Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, dynamic>>[] includes);
+
     }
 }

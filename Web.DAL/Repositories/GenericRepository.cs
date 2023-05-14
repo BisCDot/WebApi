@@ -12,6 +12,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore.Internal;
 using Web.DAL.Common;
 using Web.Entity.Resource;
 
@@ -157,6 +158,40 @@ namespace Web.DAL.Repositories
             if (isFilterPage)
                 query = query.Skip((pageIndex - 1) * pageSize + pagingParams.Skip).Take(pageSize);
             result.Data = query.ToList();
+            return result;
+        }
+        public async Task<FilterResult<TEntity>>  FilterWithIncludes(PagingParam<TEntity> pagingParams, Expression<Func<TEntity,bool>> predicate, params Expression<Func<TEntity, dynamic>>[] includes)
+        {
+            var pageIndex = pagingParams.PageIndex;
+            var pageSize = pagingParams.PageSize;
+            var isFilterPage = pageIndex > 0 &&  pageSize > 0;
+            if (pagingParams == null)
+            {
+                throw new ArgumentException("pagingParams");
+            }
+
+            var result = new FilterResult<TEntity>();
+            IQueryable<TEntity> query = Context.Set<TEntity>();
+            query = query.Where(predicate);
+
+            includes?.ToList().ForEach(i =>query = query.Include(i));
+            if (isFilterPage)
+            {
+                result.TotalRows = query.Count();
+            }
+            // Ordering
+            if (!string.IsNullOrEmpty(pagingParams.SortExpression))
+                query = query.OrderBy(pagingParams.SortExpression);
+            else
+            {
+                if (typeof(TEntity).GetProperty("Id") != null)
+                    query = query.OrderBy("Id desc");
+                else if (isFilterPage)
+                    throw new ArgumentNullException("SortExpression require");
+            }
+            if (isFilterPage)
+                query = query.Skip((pageIndex - 1) * pageSize + pagingParams.Skip).Take(pageSize);
+            result.Data = await query.AsNoTracking().ToListAsync();
             return result;
         }
     }

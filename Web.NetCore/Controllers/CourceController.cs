@@ -21,9 +21,9 @@ namespace Web.NetCore.Controllers
             return await _courseBll.Add(course);
         }
         [HttpPost]
-        public object List(CourseFillterResource filter)
+        public async Task<IActionResult> List(CourseFillterResource filter)
         {
-            return _courseBll.GetList(filter);
+            return Ok(await _courseBll.GetList(filter));
         }
         [HttpGet]
         public async Task<object> GetAll()

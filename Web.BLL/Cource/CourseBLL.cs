@@ -62,10 +62,38 @@ namespace Web.BLL.Cource
             return false;
         }
 
-        public FilterResult<CourseResource> GetList(CourseFillterResource filter)
+        public async Task<FilterResult<CourseResource>> GetList(CourseFillterResource filter)
         {
-            
-            return _courceRepository.Filter(filter);
+            var result = await _courceRepository.FilterWithIncludes(new PagingParam<CourseEntity>
+                {
+                    MaxPrice = filter.MaxPrice,
+                    MinPrice = filter.MinPrice,
+                    PageIndex = filter.PageIndex,
+                    PageSize = filter.PageSize,
+                    Skip = filter.Skip,
+                    SortExpression = filter.SortExpression,
+                    NotSkip = filter.NotSkip
+
+                },
+                c => c.Price < filter.MaxPrice && c.Price > filter.MinPrice 
+                                                  && c.Title.Contains(filter.KeyWord.ToLower())
+                                ,
+                c=>c.Category);
+            var value = new FilterResult<CourseResource>()
+            {
+                TotalRows = result.TotalRows,
+                Data = result.Data.Select(x => new CourseResource
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Description = x.Description,
+                    Price = x.Price,
+                    CategoryId = x.CategoryId,
+                    CreatedDate = x.CreatedDate,
+                    CategoryName = x.Category.Name
+                })
+            };
+            return value;
         }
         public async Task<IEnumerable<CourseEntity>> GetAll()
         {

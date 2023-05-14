@@ -16,6 +16,6 @@ namespace Web.BLL.Cource
         Task<bool> Delete(long Id);
         Task<IEnumerable<CourseEntity>> GetAll();
         Task<bool> Save(CourseResource course);
-        public FilterResult<CourseResource> GetList(CourseFillterResource filter);
+        public Task<FilterResult<CourseResource>> GetList(CourseFillterResource filter);
     }
 }

@@ -22,6 +22,7 @@ namespace Web.Entity
         public DateTime CreatedDate { get; set; }
         public int Status { get; set; }
         public long CategoryId { get; set; }
+        
         public virtual CategoryEntity Category { get; set; }
     }
 }

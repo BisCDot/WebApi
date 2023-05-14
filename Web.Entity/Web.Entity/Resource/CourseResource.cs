@@ -33,6 +33,7 @@ namespace Web.Entity.Resource
         public double Price { get; set; }
         public DateTime CreatedDate { get; set; }
         public long CategoryId { get; set; }
+        public string CategoryName { get; set; }
         public int Status { get; set; }
     }
 
