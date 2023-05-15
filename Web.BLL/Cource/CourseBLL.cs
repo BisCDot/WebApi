@@ -72,13 +72,12 @@ namespace Web.BLL.Cource
                     PageSize = filter.PageSize,
                     Skip = filter.Skip,
                     SortExpression = filter.SortExpression,
-                    NotSkip = filter.NotSkip
-
+                    NotSkip = filter.NotSkip,
+                    CategoryId = filter.CategoryId
                 },
-                c => c.Price < filter.MaxPrice && c.Price > filter.MinPrice 
-                                                  && c.Title.Contains(filter.KeyWord.ToLower())
-                                ,
-                c=>c.Category);
+                x =>  !string.IsNullOrWhiteSpace(filter.KeyWord) ? x.Title.Contains(filter.KeyWord.ToLower()) : (filter.MaxPrice> 0 && filter.MinPrice > 0) ? x.Price < filter.MaxPrice && x.Price> filter.MinPrice 
+                    : filter.CategoryId > 0 ? x.CategoryId == filter.CategoryId : filter.Status > 0 ? x.Status == filter.Status : true,
+                c => c.Category);
             var value = new FilterResult<CourseResource>()
             {
                 TotalRows = result.TotalRows,
@@ -88,6 +87,7 @@ namespace Web.BLL.Cource
                     Title = x.Title,
                     Description = x.Description,
                     Price = x.Price,
+                    Image = x.Image,
                     CategoryId = x.CategoryId,
                     CreatedDate = x.CreatedDate,
                     CategoryName = x.Category.Name

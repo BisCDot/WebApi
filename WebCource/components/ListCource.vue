@@ -7,12 +7,19 @@
             type="search"
             placeholder="Tìm kiếm sản phẩm..."
             spellcheck="false"
+            v-model="valueSearch"
             id="queryFind"
           />
-          <span class="bi-search">
+          <span class="bi-search" @click="searchProduct">
             <div class="bi-search-icon"></div>
           </span>
         </form>
+      </div>
+      <div class="select-category">
+        <select class="form-select" aria-label="Default select example" @change="filterCategory">
+          <option selected>lọc danh mục</option>
+          <option v-for="item in category" :value="item.id">{{item.name}}</option>
+        </select>
       </div>
       <div class="filter-price">
         <span class="filter-title">Giá tiền</span>
@@ -54,7 +61,7 @@
         <td>{{ item.description }}</td>
         <td><img class="image-list" :src="item.image"></td>
         <td>{{ item.price }}</td>
-        <td>{{}}</td>
+        <td>{{item.categoryName}}</td>
         <td>
           <div class="d-grid gap-2 d-md-block">
             <!-- Button trigger modal -->
@@ -103,6 +110,7 @@ export default {
       categories: null,
       minPrice : 0,
       maxPrice : 0,
+      valueSearch : "",
       id: 0,
       TitleEditProduct : "",
       pagingParamFilter : {
@@ -113,15 +121,55 @@ export default {
         notSkip: 0,
         minPrice: 0,
         maxPrice: 0,
-        status: 0,
+        categoryId : 0,
+        status: 200,
         keyWord: ""
       }
     }
   },
   async created() {
     await this.getList();
+    await this.getCategory();
   },
   methods: {
+    filterCategory(e){
+      if (e.target.value > 0){
+        this.$store.dispatch('product/getList',{
+          sortExpression: "",
+          pageSize: 0,
+          pageIndex: 0,
+          skip: 0,
+          notSkip: 0,
+          minPrice: 0,
+          maxPrice: 0,
+          categoryId: e.target.value,
+          status: 200,
+          keyWord: ""
+        })
+      }else{
+        this.getList();
+      }
+      console.log(e.target.value)
+    },
+    async searchProduct(){
+        if (this.valueSearch != ""){
+          this.$store.dispatch('product/getList', {
+            sortExpression: "",
+            pageSize: 0,
+            pageIndex: 0,
+            skip: 0,
+            notSkip: 0,
+            minPrice: 0,
+            maxPrice: 0,
+            categoryId : 0,
+            status: 200,
+            keyWord: this.valueSearch
+          })
+        }else {
+         await this.getList()
+        }
+
+    },
     filterPrice() {
       if (this.maxPrice > 0){
         this.$store.dispatch('product/getList',{
@@ -132,7 +180,8 @@ export default {
           notSkip: 0,
           minPrice: 1,
           maxPrice: this.maxPrice,
-          status: 0,
+          categoryId : 0,
+          status: 200,
           keyWord: ""
         })
       }else{
@@ -148,7 +197,8 @@ export default {
         notSkip: 0,
         minPrice: 0,
         maxPrice: 0,
-        status: 0,
+        categoryId : 0,
+        status: 200,
         keyWord: ""
       });
     },
@@ -159,8 +209,8 @@ export default {
       await this.$store.dispatch('product/delete',id)
       await this.getList();
     },
-    async getCategoryById(id){
-      await  this.$store.dispatch('category/getById',id)
+    async getCategory(){
+      await  this.$store.dispatch('category/getCategory')
     },
     async saveEdit(){
       await this.getList();
@@ -177,6 +227,9 @@ export default {
       cource(){
         return this.$store.getters['product/listCourse']
       },
+      category(){
+        return this.$store.getters['category/listCategory']
+      }
   }
 }
 </script>
@@ -191,7 +244,7 @@ export default {
 .slider{
   float: right;
   width: 200px;
-  line-height: 50px;
+  margin-bottom: 73px;
 }
 .filter{
   height: 60px;
@@ -254,7 +307,7 @@ export default {
 }
 .filter-title{
   position: absolute;
-  top: 0;
+  bottom: 20px;
   margin-right: 207px;
   right: 0;
   font-weight: 600;
@@ -285,5 +338,13 @@ export default {
   width: 100px;
   right: 167px;
   margin-top: 60px;
+}
+.select-category{
+  display: inline-flex;
+}
+.select-category > select{
+  margin-top: 20px;
+  width: 124px;
+  margin-left: 100px;
 }
 </style>

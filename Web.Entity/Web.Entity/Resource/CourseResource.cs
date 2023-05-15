@@ -18,11 +18,13 @@ namespace Web.Entity.Resource
         public int NotSkip { get; set; }
         public int MinPrice { get; set; }
         public int MaxPrice { get; set; }
+        public int CategoryId { get; set; }
 
         public virtual List<Expression<Func<Entity, bool>>> GetPredicates()
         {
             return new List<Expression<Func<Entity, bool>>>();
         }
+        
     }
     public class CourseResource
     {
@@ -37,12 +39,12 @@ namespace Web.Entity.Resource
         public int Status { get; set; }
     }
 
-    public class CourseFillterResource : PagingParam<CourseResource>
+    public class CourseFillterResource : PagingParam<CourseEntity>
     {
         public int Status { get; set; }
         public string KeyWord { get; set; }
 
-        public override List<Expression<Func<CourseResource, bool>>> GetPredicates()
+        public override List<Expression<Func<CourseEntity, bool>>> GetPredicates()
         {
             var filter = base.GetPredicates();
             if (!string.IsNullOrEmpty(KeyWord))
