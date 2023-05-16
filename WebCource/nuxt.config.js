@@ -8,7 +8,7 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      { hid: 'description', name: 'description', content: 'my description' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
@@ -19,7 +19,7 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
   ],
-  ssr: false,
+  ssr: true,
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     {src : '@/plugins/common.js',ssr : false}
@@ -36,7 +36,9 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxt/http'
+
   ],
   axios: { baseURL: 'http://localhost:5555' },
   // Build Configuration: https://go.nuxtjs.dev/config-build

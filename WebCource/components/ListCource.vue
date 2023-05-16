@@ -2,22 +2,22 @@
   <div>
     <div class="filter">
       <div class="search">
-        <form action="/search" class="input-search" method="get">
+        <div  class="input-search" >
           <input
-            type="search"
             placeholder="Tìm kiếm sản phẩm..."
             spellcheck="false"
             v-model="valueSearch"
             id="queryFind"
+            v-on:keyup.enter="searchProduct"
           />
           <span class="bi-search" @click="searchProduct">
             <div class="bi-search-icon"></div>
           </span>
-        </form>
+        </div>
       </div>
       <div class="select-category">
-        <select class="form-select" aria-label="Default select example" @change="filterCategory">
-          <option selected>lọc danh mục</option>
+        <select class="form-select" aria-label="Default select example" v-model="pagingParamFilter.categoryId">
+          <option selected value="0">lọc danh mục</option>
           <option v-for="item in category" :value="item.id">{{item.name}}</option>
         </select>
       </div>
@@ -122,7 +122,7 @@ export default {
         minPrice: 0,
         maxPrice: 0,
         categoryId : 0,
-        status: 200,
+        status: 0,
         keyWord: ""
       }
     }
@@ -131,76 +131,32 @@ export default {
     await this.getList();
     await this.getCategory();
   },
+  watch:{
+    'pagingParamFilter.categoryId'(){
+      this.pagingParamFilter.pageIndex = 1
+      this.getList();
+    }
+  },
   methods: {
-    filterCategory(e){
-      if (e.target.value > 0){
-        this.$store.dispatch('product/getList',{
-          sortExpression: "",
-          pageSize: 0,
-          pageIndex: 0,
-          skip: 0,
-          notSkip: 0,
-          minPrice: 0,
-          maxPrice: 0,
-          categoryId: e.target.value,
-          status: 200,
-          keyWord: ""
-        })
-      }else{
-        this.getList();
-      }
-      console.log(e.target.value)
-    },
+    // filterCategory(e){
+    //   this.pagingParamFilter.categoryId = e.target.value || 0
+    //   this.pagingParamFilter.pageIndex = 1
+    //   this.getList();
+    // },
     async searchProduct(){
-        if (this.valueSearch != ""){
-          this.$store.dispatch('product/getList', {
-            sortExpression: "",
-            pageSize: 0,
-            pageIndex: 0,
-            skip: 0,
-            notSkip: 0,
-            minPrice: 0,
-            maxPrice: 0,
-            categoryId : 0,
-            status: 200,
-            keyWord: this.valueSearch
-          })
-        }else {
-         await this.getList()
-        }
-
+      this.pagingParamFilter.keyWord = this.valueSearch
+      this.pagingParamFilter.pageIndex = 1
+      this.getList();
     },
     filterPrice() {
-      if (this.maxPrice > 0){
-        this.$store.dispatch('product/getList',{
-          sortExpression: "",
-          pageSize: 0,
-          pageIndex: 0,
-          skip: 0,
-          notSkip: 0,
-          minPrice: 1,
-          maxPrice: this.maxPrice,
-          categoryId : 0,
-          status: 200,
-          keyWord: ""
-        })
-      }else{
-        this.getList();
-      }
+      this.pagingParamFilter.maxPrice = this.maxPrice
+      this.pagingParamFilter.minPrice = this.minPrice
+      this.pagingParamFilter.pageIndex = 1
+      this.getList();
     },
     paginationClick(event, pageNumber){
-      this.$store.dispatch('product/getList',{
-        sortExpression: "",
-        pageSize: this.pagingParamFilter.pageSize,
-        pageIndex: pageNumber,
-        skip: 0,
-        notSkip: 0,
-        minPrice: 0,
-        maxPrice: 0,
-        categoryId : 0,
-        status: 200,
-        keyWord: ""
-      });
+      this.pagingParamFilter.pageIndex = pageNumber
+      this.getList();
     },
     getList() {
       this.$store.dispatch('product/getList',this.pagingParamFilter)
