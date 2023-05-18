@@ -41,7 +41,6 @@
 </template>
 
 <script>
-
 export default {
   name: "categoryadd",
   components: {},
@@ -51,7 +50,7 @@ export default {
       modalShow : false,
       showIdInputEdit : false,
       id : 0,
-      editTitleCategory : ""
+      editTitleCategory : "",
     }
   },
   async created() {

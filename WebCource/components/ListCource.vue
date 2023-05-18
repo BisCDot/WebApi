@@ -21,24 +21,29 @@
           <option v-for="item in category" :value="item.id">{{item.name}}</option>
         </select>
       </div>
-      <div class="filter-price">
-        <span class="filter-title">Giá tiền</span>
-        <range-slider
-          class="slider"
-          :min="minPrice"
-          max="10000000"
-          step="10"
-          v-model="maxPrice"
-          @change="filterPrice"
-        >
-        </range-slider>
-        <div class="filter-price-input">
-          <label class="name-input">Từ</label>
-          <label class="input-name">Đến</label>
-          <input type="number" v-model="pagingParamFilter.minPrice">
-          <input type="text" v-model="maxPrice">
-        </div>
+      <div class="icon-filter-price" @click="showFilterPrice = !showFilterPrice">
       </div>
+      <div class="filter-price" v-if="showFilterPrice">
+        <div class="filter-price-parent">
+          <span class="filter-title">Giá tiền</span>
+          <range-slider
+            class="slider"
+            :min="minPrice"
+            max="5000000"
+            step="10"
+            v-model="maxPrice"
+            @change="filterPrice"
+          >
+          </range-slider>
+          <div class="filter-price-input">
+            <label class="name-input">Từ</label>
+            <input type="number" v-model="pagingParamFilter.minPrice">
+            <label class="input-name">Đến</label>
+            <input type="text" v-model="maxPrice">
+          </div>
+        </div>
+        </div>
+
     </div>
 
     <table class="table">
@@ -46,11 +51,11 @@
       <thead class="table-dark">
       <tr>
         <th scope="col">Id</th>
-        <th scope="col">title</th>
+        <th scope="col">Title</th>
         <th scope="col">Description</th>
-        <th scope="col">Image</th>
         <th scope="col">Price</th>
         <th scope="col">Danh Mục</th>
+        <th scope="col">Image</th>
         <th scope="col"></th>
         <th scope="col"></th>
       </tr>
@@ -59,9 +64,9 @@
         <td>{{ item.id }}</td>
         <td>{{ item.title }}</td>
         <td>{{ item.description }}</td>
-        <td><img class="image-list" :src="item.image"></td>
-        <td>{{ item.price }}</td>
+        <td>{{ item.price | formatPrice }}</td>
         <td>{{item.categoryName}}</td>
+        <td><img class="image-list" :src="item.image"></td>
         <td>
           <div class="d-grid gap-2 d-md-block">
             <!-- Button trigger modal -->
@@ -106,6 +111,7 @@ export default {
   data() {
     return {
       showIdEditProduct : false,
+      showFilterPrice : false,
       modalShow: false,
       categories: null,
       minPrice : 0,
@@ -125,6 +131,11 @@ export default {
         status: 0,
         keyWord: ""
       }
+    }
+  },
+  filters : {
+    formatPrice(value) {
+      return  new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
     }
   },
   async created() {
@@ -198,9 +209,7 @@ export default {
 .overflow-auto{
 }
 .slider{
-  float: right;
-  width: 200px;
-  margin-bottom: 73px;
+  width: 100%;
 }
 .filter{
   height: 60px;
@@ -211,6 +220,7 @@ export default {
   height: 100%;
   float: left;
   outline: none;
+  padding-left: 10px;
 }
 
 .search .input-search {
@@ -244,6 +254,18 @@ export default {
   background-position: 3px 10px;
   background-repeat: no-repeat;
 }
+.icon-filter-price{
+  display: inline-block;
+  width: 50px;
+  height: 60px;
+  float: right;
+  cursor: pointer;
+  background: url(https://img.icons8.com/ios-filled/20/filter--v1.png);
+  background-repeat: no-repeat;
+  background-position: 0px 20px;
+  line-height: 60px;
+  padding-left: 44px;
+}
 .bi-search-icon {
 
 }
@@ -261,46 +283,39 @@ export default {
 .filter-price {
   position: relative;
 }
-.filter-title{
+.filter-price .filter-price-parent{
   position: absolute;
-  bottom: 20px;
-  margin-right: 207px;
+  background-color: #ffffff;
+  border: 2px solid black;
+  top: 0;
   right: 0;
+}
+.filter-title{
   font-weight: 600;
 }
 .filter-price-input{
-  position: relative;
 }
 .filter-price-input .name-input {
-  float: right;
   font-weight: 500;
-  margin-top: 26px;
 }
 .filter-price-input .input-name{
-  position: absolute;
   font-weight: 500;
   right: 0;
-  margin-top: 25px;
-  padding-right: 60px;
 }
 .filter-price-input > input[type="text"]{
-  position: absolute;
   right: 0;
   width: 100px;
-  margin-top: 60px;
 }
 .filter-price-input > input[type="number"]{
-  position: absolute;
   width: 100px;
   right: 167px;
-  margin-top: 60px;
 }
 .select-category{
-  display: inline-flex;
+  display: inline-grid;
 }
 .select-category > select{
   margin-top: 20px;
   width: 124px;
-  margin-left: 100px;
+  margin-left: 368px;
 }
 </style>

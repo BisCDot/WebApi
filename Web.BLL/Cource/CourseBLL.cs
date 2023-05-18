@@ -75,7 +75,7 @@ namespace Web.BLL.Cource
                     NotSkip = filter.NotSkip,
                     CategoryId = filter.CategoryId
                 },
-                x =>  !string.IsNullOrWhiteSpace(filter.KeyWord) ? x.Title.Contains(filter.KeyWord.ToLower()) :  (filter.MaxPrice> 0 && filter.MinPrice> 0) ? x.Price < filter.MaxPrice && x.Price> filter.MinPrice 
+                x =>  !string.IsNullOrWhiteSpace(filter.KeyWord) ? x.Title.Contains(filter.KeyWord.ToLower()) :  (filter.MaxPrice> 0 && filter.MinPrice>= 0) ? x.Price < filter.MaxPrice && x.Price> filter.MinPrice 
                     : filter.CategoryId > 0 ? x.CategoryId == filter.CategoryId : filter.Status > 0 ? x.Status == filter.Status : true,
                 c => c.Category);
             var value = new FilterResult<CourseResource>()

@@ -19,10 +19,11 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
   ],
-  ssr: true,
+  ssr: false,
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    {src : '@/plugins/common.js',ssr : false}
+    {src : '@/plugins/common.js',ssr : false},
+    {src : '@/plugins/ant-design-vue.js',ssr : false}
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -36,9 +37,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
-    '@nuxtjs/axios',
-    '@nuxt/http'
-
+    '@nuxtjs/axios'
   ],
   axios: { baseURL: 'http://localhost:5555' },
   // Build Configuration: https://go.nuxtjs.dev/config-build
